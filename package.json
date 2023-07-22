@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write --ignore-path .gitignore ."
   },
   "dependencies": {
     "@types/node": "20.4.4",
@@ -15,7 +16,9 @@
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.12",
     "lorem-ipsum": "^2.0.8",
+    "md5": "^2.3.0",
     "next": "13.4.12",
+    "prettier": "^3.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "5.1.6"
