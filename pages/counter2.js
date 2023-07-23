@@ -7,7 +7,7 @@ export default function Counter({ count }) {
 export function getServerSideProps() {
   return {
     props: {
-      count: count++
-    }
+      count: count++,
+    },
   }
 }

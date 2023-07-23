@@ -1,4 +1,4 @@
-import { colors, database } from '@/lib/data'
+import { colors, listPrompts } from '@/lib/data'
 import Link from 'next/link'
 
 export default function Index({
@@ -32,7 +32,7 @@ export default function Index({
 
 export function getStaticProps() {
   const ids = colors()
-  const prompts = Object.entries(database).map(([id, { prompt }]) => ({
+  const prompts = listPrompts().map(([id, { prompt }]) => ({
     id,
     prompt,
   }))

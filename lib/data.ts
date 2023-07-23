@@ -11,12 +11,14 @@ export function colors(): string[] {
   ]
 }
 
-export const database: {
-  [id: string]: {
-    prompt: string
-    body?: string
-    children?: [{ id: string; prompt: string }]
-  }
+type Prompt = {
+  prompt: string
+  body?: string
+  children?: [{ id: string; prompt: string }]
+}
+
+const database: {
+  [id: string]: Prompt
 } = {
   '1': {
     prompt: 'ancient rome',
@@ -31,4 +33,19 @@ export const database: {
   '2': {
     prompt: 'Julius Caesar',
   },
+}
+
+export const listPrompts: () => [string, Prompt][] = () => {
+  return Object.entries(database)
+}
+
+export const getPrompt: (id: string) => Prompt = (id: string) => {
+  return database[id]
+}
+
+export const setPrompt: (id: string, prompt: Prompt) => void = (
+  id: string,
+  prompt: Prompt,
+) => {
+  database[id] = prompt
 }
