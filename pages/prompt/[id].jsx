@@ -64,6 +64,7 @@ export default function Page({ id, prompt }) {
     <div>
       <h1>{prompt.prompt}</h1>
       <p>{prompt.body}</p>
+      <p>{JSON.stringify(prompt.user)}</p>
       <p>Do you want to know more?</p>
       <ol>
         {prompt.children.map((child) => (
