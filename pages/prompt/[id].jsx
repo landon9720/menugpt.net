@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { LoremIpsum } from 'lorem-ipsum'
-import { listPrompts, getPrompt, setPrompt } from '@/lib/data'
+import { getPrompt, setPrompt } from '@/lib/data'
 import Link from 'next/link'
 import md5 from 'md5'
 
@@ -25,15 +25,9 @@ export default function Page({ id, prompt, body, children }) {
   )
 }
 
-export const getStaticPaths = () => {
+export const getStaticPaths = async () => {
   return {
-    paths: listPrompts().map(([id, _]) => {
-      return {
-        params: {
-          id,
-        },
-      }
-    }),
+    paths: [{ params: { id: '1' } }],
     fallback: true,
   }
 }
@@ -41,7 +35,7 @@ export const getStaticPaths = () => {
 const gen = new LoremIpsum()
 
 export const getStaticProps = async ({ params: { id } }) => {
-  var record = getPrompt(id)
+  var record = await getPrompt(id)
   if (!record) {
     return {
       notFound: true,
@@ -58,7 +52,7 @@ export const getStaticProps = async ({ params: { id } }) => {
         prompt,
       }
       record.children[i] = child
-      setPrompt(id, child)
+      await setPrompt(id, child)
     }
   }
   return {
