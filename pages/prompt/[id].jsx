@@ -6,7 +6,6 @@ import { UserProvider, useUser } from '@auth0/nextjs-auth0/client'
 function Generate({ id, prompt }) {
   const router = useRouter()
   const { user, error, isLoading } = useUser()
-  console.log('user', user)
   const generate = async () => {
     try {
       const res = await fetch(`/api/prompt/${id}`)
@@ -26,11 +25,12 @@ function Generate({ id, prompt }) {
   }
   return (
     <div>
-      <h1>{prompt.prompt}</h1>
+      <h1>Input prompt: {prompt.prompt}</h1>
+      <p>Parent prompt: {prompt.parent && <Link href={prompt.parent}>{prompt.parent}</Link> || "none"}</p>
       <p>Not generated, yet.</p>
       {user ? (
         <div>
-          <p>{JSON.stringify(user)}</p>
+          <p>Authenticated user: {JSON.stringify(user)}</p>
           <p>
             <button onClick={generate}>Generate</button>
           </p>
@@ -62,9 +62,10 @@ export default function Page({ id, prompt }) {
   }
   return (
     <div>
-      <h1>{prompt.prompt}</h1>
-      <p>{prompt.body}</p>
-      <p>{JSON.stringify(prompt.user)}</p>
+      <h1>Input prompt: {prompt.prompt}</h1>
+      <p>Body: {prompt.body}</p>
+      <p>Created by user:{JSON.stringify(prompt.user)}</p>
+      <p>Parent prompt: {prompt.parent && <Link href={prompt.parent}>{prompt.parent}</Link> || "none"}</p>
       <p>Do you want to know more?</p>
       <ol>
         {prompt.children.map((child) => (

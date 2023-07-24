@@ -20,8 +20,9 @@ export function colors(): string[] {
 export interface Prompt {
   prompt: string
   body?: string
-  children?: [{ id: string; prompt: string }],
+  children?: [{ id: string; prompt: string }]
   user?: any
+  parent?: string
 }
 
 // const database: {

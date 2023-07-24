@@ -19,13 +19,14 @@ export default withApiAuthRequired(async function handler(req, res) {
     prompt.children = []
     for (var i = 0; i < 10; ++i) {
       const childPromptInput = gen.generateWords(3)
-      const id = md5(childPromptInput)
+      const childId = md5(childPromptInput)
       const child = {
-        id,
+        id: childId,
         prompt: childPromptInput,
+        parent: id
       }
       prompt.children[i] = child
-      await setPrompt(id, child)
+      await setPrompt(childId, child)
     }
     prompt.user = user
     console.log('new prompt', prompt)
