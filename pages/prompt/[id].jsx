@@ -1,21 +1,38 @@
 import { useRouter } from 'next/router'
-import { LoremIpsum } from 'lorem-ipsum'
-import { getPrompt, setPrompt } from '@/lib/data'
+import { getPrompt } from '@/lib/data'
 import Link from 'next/link'
-import md5 from 'md5'
 
-export default function Page({ id, prompt, body, children }) {
+export default function Page({ id, prompt }) {
   const router = useRouter()
   if (router.isFallback) {
     return <div>Loading...</div>
   }
+  if (!prompt.body) {
+    const generate = async () => {
+      try {
+        const res = await fetch(`/api/prompt/${id}`);
+        const data = await res.body;
+        console.log(data);
+        router.reload();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    return (
+      <div>
+        <h1>{prompt.prompt}</h1>
+        <p>Not generated, yet.</p>
+        <button onClick={generate}>Generate</button>
+      </div>
+    )
+  }
   return (
     <div>
-      <h1>{prompt}</h1>
-      <p>{body}</p>
+      <h1>{prompt.prompt}</h1>
+      <p>{prompt.body}</p>
       <p>Do you want to know more?</p>
       <ol>
-        {children.map((child) => (
+        {prompt.children.map((child) => (
           <li key={child.id}>
             <Link href={child.id}>{child.prompt}</Link>
           </li>
@@ -32,35 +49,18 @@ export const getStaticPaths = async () => {
   }
 }
 
-const gen = new LoremIpsum()
-
 export const getStaticProps = async ({ params: { id } }) => {
-  var record = await getPrompt(id)
-  if (!record) {
+  var prompt = await getPrompt(id)
+  console.log("prompt", prompt);
+  if (!prompt) {
     return {
       notFound: true,
-    }
-  }
-  if (!record.body) {
-    record.body = gen.generateWords(7)
-    record.children = []
-    for (var i = 0; i < 10; ++i) {
-      const prompt = gen.generateWords(3)
-      const id = md5(prompt)
-      const child = {
-        id,
-        prompt,
-      }
-      record.children[i] = child
-      await setPrompt(id, child)
     }
   }
   return {
     props: {
       id,
-      prompt: record.prompt,
-      body: record.body,
-      children: record.children,
+      prompt,
     },
   }
 }
