@@ -1,6 +1,52 @@
 import { useRouter } from 'next/router'
 import { getPrompt } from '@/lib/data'
 import Link from 'next/link'
+import { UserProvider, useUser } from '@auth0/nextjs-auth0/client'
+
+function Generate({ id, prompt }) {
+  const router = useRouter()
+  const { user, error, isLoading } = useUser()
+  console.log('user', user)
+  const generate = async () => {
+    try {
+      const res = await fetch(`/api/prompt/${id}`)
+      const data = await res.body
+      console.log(data)
+      router.reload()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  if (isLoading) {
+    return <div>Loading user...</div>
+  }
+  if (error) {
+    console.error(error)
+    return <div>{error.message}</div>
+  }
+  return (
+    <div>
+      <h1>{prompt.prompt}</h1>
+      <p>Not generated, yet.</p>
+      {user ? (
+        <div>
+          <p>{JSON.stringify(user)}</p>
+          <p>
+            <button onClick={generate}>Generate</button>
+          </p>
+          <p>
+            <a href="/api/auth/logout">Logout</a>
+          </p>
+        </div>
+      ) : (
+        <div>
+          <p>sign-in required</p>
+          <a href="/api/auth/login">Login</a>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function Page({ id, prompt }) {
   const router = useRouter()
@@ -8,22 +54,10 @@ export default function Page({ id, prompt }) {
     return <div>Loading...</div>
   }
   if (!prompt.body) {
-    const generate = async () => {
-      try {
-        const res = await fetch(`/api/prompt/${id}`);
-        const data = await res.body;
-        console.log(data);
-        router.reload();
-      } catch (err) {
-        console.log(err);
-      }
-    }
     return (
-      <div>
-        <h1>{prompt.prompt}</h1>
-        <p>Not generated, yet.</p>
-        <button onClick={generate}>Generate</button>
-      </div>
+      <UserProvider>
+        <Generate id={id} prompt={prompt} />
+      </UserProvider>
     )
   }
   return (
@@ -51,7 +85,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params: { id } }) => {
   var prompt = await getPrompt(id)
-  console.log("prompt", prompt);
+  console.log('prompt', prompt)
   if (!prompt) {
     return {
       notFound: true,
