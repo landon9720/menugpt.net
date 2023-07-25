@@ -14,10 +14,8 @@ function Generate({ id, prompt }) {
     try {
       setIsGenerating(true)
       const res = await fetch(`/api/prompt/${id}`)
-      const data = await res.body
-      console.log(data)
       if (res.status == 200) {
-        router.reload()
+        setTimeout(() => router.reload(), 500)
       }
     } catch (err) {
       setIsGenerating(false)
@@ -28,7 +26,6 @@ function Generate({ id, prompt }) {
     fetch(`/api/credits`).then(async (res) => {
       const data = await res.json()
       if (res.status == 200) {
-        console.log(data)
         setCredits(data)
       }
     })
@@ -113,7 +110,7 @@ export default function Page({ id, prompt }) {
 export const getStaticPaths = async () => {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: 'blocking',
   }
 }
 
