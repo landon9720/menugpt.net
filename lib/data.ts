@@ -64,6 +64,13 @@ export const getUserCredits: (id: string) => Promise<number | null> = async (
   return null
 }
 
+export const setUserCredits: (
+  id: string,
+  quantity: number,
+) => Promise<void> = async (id: string, quantity: number) => {
+  await db.set(userCreditsKey(id), quantity)
+}
+
 export const incrementUserCredits: (
   id: string,
   quantity: number,

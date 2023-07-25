@@ -5,7 +5,9 @@ import {
   handleLogout,
 } from '@auth0/nextjs-auth0'
 
-import { getUserCredits, incrementUserCredits } from '@/lib/data'
+import { getUserCredits, setUserCredits } from '@/lib/data'
+
+const NEW_USER_CREDITS = 10
 
 export default handleAuth({
   async login(req, res) {
@@ -18,12 +20,13 @@ export default handleAuth({
     await handleCallback(req, res, {
       afterCallback: async function (req, res, session) {
         const userId = session.user.sub
-        const credits = await getUserCredits(userId)
+        let credits = await getUserCredits(userId)
         if (credits === null) {
-          console.log('new user', session.user)
-          const credits = await incrementUserCredits(userId, 5)
+          console.log('new user sign-in', session.user)
+          credits = NEW_USER_CREDITS
+          await setUserCredits(userId, credits)
         } else {
-          console.log('existing user', session.user, 'credits', credits)
+          console.log('existing user sign-in', session.user, 'credits', credits)
         }
         session.credits = credits
         return session
