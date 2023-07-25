@@ -25,58 +25,14 @@ export interface Prompt {
   parent?: string
 }
 
-// const database: {
-//   [id: string]: Prompt
-// } = {
-//   '1': {
-//     prompt: 'ancient rome',
-//     body: 'Ancient Rome was a kingdom, then a republic, then an empire, and then history.',
-//     children: [
-//       {
-//         id: '2',
-//         prompt: 'Julius Caesar',
-//       },
-//     ],
-//   },
-//   '2': {
-//     prompt: 'Julius Caesar',
-//   },
-// }
-
-// export const listPrompts: () => [string, Prompt][] = () => {
-//   return Object.entries(database)
-// }
-
-// export const getPrompt: (id: string) => Prompt = (id: string) => {
-//   return database[id]
-// }
-
-// export const setPrompt: (id: string, prompt: Prompt) => void = (
-//   id: string,
-//   prompt: Prompt,
-// ) => {
-//   database[id] = prompt
-// }
-
-// export const listPrompts: () => Promise<
-//   [string, Prompt][]
-// > = async () => {
-//   const keys: string[] = await kv.keys('*')
-//   const keyValues: Promise<[string, Prompt | null]>[] = keys.map<
-//     Promise<[string, Prompt | null]>
-//   >(async (key: string) => {
-//     const value: Prompt | null = await kv.get<Prompt>(key)
-//     return [key, value];
-//   })
-//   return (await Promise.all(keyValues)).filter(
-//     ([_, value]) => value !== null
-//   ) as [string, Prompt][];
-// }
+function promptKey(id: string): string {
+  return `prompt:${id}`
+}
 
 export const getPrompt: (id: string) => Promise<Prompt | null> = async (
   id: string,
 ) => {
-  const json: string | null = await db.get(id)
+  const json: string | null = await db.get(promptKey(id))
   if (json) {
     return JSON.parse(json) as Prompt
   }
@@ -88,5 +44,32 @@ export const setPrompt: (id: string, prompt: Prompt) => Promise<void> = async (
   prompt: Prompt,
 ) => {
   const json = JSON.stringify(prompt)
-  await db.set(id, json)
+  await db.set(promptKey(id), json)
+}
+
+function userCreditsKey(id: string): string {
+  return `credits:${id}`
+}
+
+export const getUserCredits: (id: string) => Promise<number | null> = async (
+  id: string,
+) => {
+  const json: string | null = await db.get(userCreditsKey(id))
+  if (json) {
+    return JSON.parse(json) as number
+  }
+  return null
+}
+
+export const incrementUserCredits: (
+  id: string,
+  quantity: number,
+) => Promise<number> = async (id: string, quantity: number) => {
+  return await db.incrBy(userCreditsKey(id), quantity)
+}
+
+export const decrementUserCredits: (id: string) => Promise<number> = async (
+  id: string,
+) => {
+  return db.decrBy(userCreditsKey(id), 1)
 }

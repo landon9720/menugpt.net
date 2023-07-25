@@ -2,15 +2,11 @@ import { colors } from '@/lib/data'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-export default function Index({
-  ids,
-}: {
-  ids: string[]
-}) {
-  const router = useRouter();
-  const homeRedirectTo = router.query.homeRedirectTo as string;
+export default function Index({ ids }: { ids: string[] }) {
+  const router = useRouter()
+  const homeRedirectTo = router.query.homeRedirectTo as string
   if (homeRedirectTo) {
-    router.replace(homeRedirectTo);
+    router.replace(homeRedirectTo)
   }
   return (
     <>

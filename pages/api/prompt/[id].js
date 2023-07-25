@@ -1,18 +1,31 @@
 import { LoremIpsum } from 'lorem-ipsum'
-import { getPrompt, setPrompt } from '@/lib/data'
+import {
+  getPrompt,
+  setPrompt,
+  getUserCredits,
+  decrementUserCredits,
+} from '@/lib/data'
 import md5 from 'md5'
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
+import { updateSession } from '@auth0/nextjs-auth0'
 
 const gen = new LoremIpsum()
 
 export default withApiAuthRequired(async function handler(req, res) {
-  const { user } = await getSession(req, res)
+  const session = await getSession(req, res)
+  const user = session.user
   const { id } = req.query
-  var prompt = await getPrompt(id)
+  const prompt = await getPrompt(id)
   if (!prompt) {
-    return {
-      notFound: true,
-    }
+    res.status(404).end()
+    return
+  }
+  const userCredits = await getUserCredits(user.sub)
+  console.log('generating prompt response; user credits', userCredits)
+  if (!userCredits) {
+    console.log('no credits')
+    res.status(401).end()
+    return
   }
   if (!prompt.body) {
     prompt.body = gen.generateWords(7)
@@ -23,7 +36,7 @@ export default withApiAuthRequired(async function handler(req, res) {
       const child = {
         id: childId,
         prompt: childPromptInput,
-        parent: id
+        parent: id,
       }
       prompt.children[i] = child
       await setPrompt(childId, child)
@@ -32,6 +45,10 @@ export default withApiAuthRequired(async function handler(req, res) {
     console.log('new prompt', prompt)
     await setPrompt(id, prompt)
     await res.revalidate(`/prompt/${id}`)
+    const credits = await decrementUserCredits(user.sub)
+    console.log('credits remain', credits)
+    session.credits = credits
+    await updateSession(req, res, session)
   }
   res.status(200).end()
 })
