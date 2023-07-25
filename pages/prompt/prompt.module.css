@@ -1,8 +1,16 @@
+a.parentLink {
+  font-size: smaller;
+}
+
 img.gopher {
   vertical-align: middle;
   width: 4rem;
   height: 4rem;
   margin: 1rem;
+}
+
+p.notGeneratedYet {
+  font-style: italic;
 }
 
 img.avatar {

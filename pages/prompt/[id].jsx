@@ -94,6 +94,13 @@ export default function Page({ id, prompt }) {
   const { prompt: promptText, body, user, parent, children, timestamp } = prompt
   return (
     <div>
+      {parent && (
+        <p>
+          <Link className={styles.parentLink} href={parent}>
+            [ &#8593; parent]
+          </Link>
+        </p>
+      )}
       <h1>
         <Image
           className={styles.gopher}
@@ -104,7 +111,11 @@ export default function Page({ id, prompt }) {
         {promptText}
       </h1>
       {body && <p>{body}</p>}
-      {!body && <p>Not generated, yet.</p>}
+      {!body && (
+        <p className={styles.notGeneratedYet}>
+          This page's content has not been generated, yet.
+        </p>
+      )}
       {!body && <Generate id={id} />}
       {user && (
         <p>
@@ -120,11 +131,6 @@ export default function Page({ id, prompt }) {
             </li>
           ))}
         </ol>
-      )}
-      {parent && (
-        <p>
-          Parent: <Link href={parent}>{parent}</Link>
-        </p>
       )}
       <UserAuth />
     </div>
