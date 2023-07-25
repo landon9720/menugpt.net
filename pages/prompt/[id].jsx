@@ -40,14 +40,14 @@ function Generate({ id }) {
   })
   const generateEnabled = user && !isLoadingUser && credits > 0 && !isGenerating
   return (
-    <div>
+    <p>
       <button onClick={generate} disabled={!generateEnabled}>
         Generate
       </button>
       {credits > 0 && <> (you have {credits} credits)</>}
       {credits === 0 && <>No credits!</>}
       {user && credits === null && <>Loading credits...</>}
-    </div>
+    </p>
   )
 }
 
@@ -64,13 +64,13 @@ export function Avatar({ user }) {
 export function UserAuth() {
   const { user, error, isLoading } = useUser()
   if (isLoading) {
-    return <div>Loading...</div>
+    return <p>Loading...</p>
   }
   if (error) {
     console.error('user error', error)
   }
   return (
-    <div>
+    <p>
       {!user && (
         <p>
           <Link href="/api/auth/login">sign-in</Link> to generate content
@@ -82,14 +82,14 @@ export function UserAuth() {
           <Link href="/api/auth/logout">sign-out</Link>
         </p>
       )}
-    </div>
+    </p>
   )
 }
 
 export default function Page({ id, prompt }) {
   const router = useRouter()
   if (router.isFallback) {
-    return <div>Loading...</div>
+    return <p>Loading...</p>
   }
   const { prompt: promptText, body, user, parent, children, timestamp } = prompt
   return (
