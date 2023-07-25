@@ -1,11 +1,8 @@
 import { createClient } from 'redis'
 
 const db = createClient({ url: process.env.KV_URL })
-db.on('error', (err) => console.log('Redis Client Error', err))
-
-;(async () => {
-  await db.connect()
-})()
+db.on('error', (err) => console.error('Redis Client Error', err))
+db.connect()
 
 export function colors(): string[] {
   return [
