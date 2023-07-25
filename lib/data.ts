@@ -7,19 +7,6 @@ const db = createClient({
 db.on('error', (err) => console.error('Redis Client Error', err))
 db.connect()
 
-export function colors(): string[] {
-  return [
-    'green',
-    'yellow',
-    'blue',
-    'purple',
-    'pink',
-    'orange',
-    'lavender',
-    'puce',
-  ]
-}
-
 export interface Prompt {
   prompt: string
   body?: string
