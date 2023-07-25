@@ -3,7 +3,6 @@ import { getPrompt } from '@/lib/data'
 import Link from 'next/link'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { useState, useEffect } from 'react'
-import TimeAgo from 'javascript-time-ago'
 import styles from './prompt.module.css'
 
 function Generate({ id }) {
@@ -66,10 +65,6 @@ function Generate({ id }) {
   )
 }
 
-TimeAgo.addDefaultLocale(en)
-import en from 'javascript-time-ago/locale/en'
-const timeAgo = new TimeAgo('en-US')
-
 export default function Page({ id, prompt }) {
   const router = useRouter()
   if (router.isFallback) {
@@ -88,13 +83,11 @@ export default function Page({ id, prompt }) {
       {!body && <p>Not generated, yet.</p>}
       {!body && <Generate id={id} />}
       {user && (
-        <>
-          <p>
-            By: {user.nickname}
-            <img className={styles.avatar} src={user.picture} alt="Avatar" />
-            {timestamp && <>{timeAgo.format(new Date(timestamp))}</>}
-          </p>
-        </>
+        <p>
+          by <img className={styles.avatar} src={user.picture} alt="Avatar" />{' '}
+          {user.nickname}
+          {timestamp && <> at {new Date(timestamp).toUTCString()}</>}
+        </p>
       )}
       {children && (
         <ol>
