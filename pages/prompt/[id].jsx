@@ -52,13 +52,45 @@ function Generate({ id }) {
           )}
           {credits === 0 && <p>No credits!</p>}
           {credits === null && <p>Loading credits...</p>}
-          <p>
-            <Link href="/api/auth/logout">Logout</Link>
-          </p>
         </div>
       ) : (
         <p>
           <Link href="/api/auth/login">sign-in required</Link>
+        </p>
+      )}
+    </div>
+  )
+}
+
+export function Avatar({ user }) {
+  const { picture, nickname } = user
+  return (
+    <>
+      by <img className={styles.avatar} src={picture} alt="Avatar" />
+      {nickname}
+    </>
+  )
+}
+
+export function UserAuth() {
+  const { user, error, isLoading } = useUser()
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+  if (error) {
+    console.error('user error', error)
+  }
+  return (
+    <div>
+      {!user && (
+        <p>
+          <Link href="/api/auth/login">sign-in</Link> to generate content
+        </p>
+      )}
+      {user && (
+        <p>
+          Signed in as <Avatar user={user} />{' '}
+          <Link href="/api/auth/logout">sign-out</Link>
         </p>
       )}
     </div>
@@ -84,8 +116,7 @@ export default function Page({ id, prompt }) {
       {!body && <Generate id={id} />}
       {user && (
         <p>
-          by <img className={styles.avatar} src={user.picture} alt="Avatar" />{' '}
-          {user.nickname}
+          <Avatar user={user} />
           {timestamp && <> at {new Date(timestamp).toUTCString()}</>}
         </p>
       )}
@@ -98,6 +129,7 @@ export default function Page({ id, prompt }) {
           ))}
         </ol>
       )}
+      <UserAuth />
     </div>
   )
 }
