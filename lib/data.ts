@@ -1,6 +1,6 @@
 import { createClient } from 'redis'
 
-const db = createClient({ url: process.env.KV_URL, legacyMode: true })
+const db = createClient({ url: process.env.KV_URL, socket: { tls: true } })
 db.on('error', (err) => console.error('Redis Client Error', err))
 db.connect()
 
