@@ -12,6 +12,10 @@ function Generate({ id }) {
   const [credits, setCredits] = useState(null)
   const [isGenerating, setIsGenerating] = useState(false)
 
+  if (userError) {
+    console.error('User error', error)
+  }
+
   const generate = async () => {
     try {
       setIsGenerating(true)
@@ -24,19 +28,16 @@ function Generate({ id }) {
       console.log(err)
     }
   }
-  if (!isLoadingUser) {
-    useEffect(() => {
+  useEffect(() => {
+    if (!isLoadingUser) {
       fetch(`/api/credits`).then(async (res) => {
         const data = await res.json()
         if (res.status == 200) {
           setCredits(data)
         }
       })
-    })
-  }
-  if (userError) {
-    console.error('User error', error)
-  }
+    }
+  })
   return (
     <div>
       {user ? (
