@@ -1,4 +1,12 @@
+img.gopher {
+  vertical-align: middle;
+  width: 4rem;
+  height: 4rem;
+  margin: 1rem;
+}
+
 img.avatar {
   vertical-align: middle;
   width: 2rem;
+  height: 2rem;
 }

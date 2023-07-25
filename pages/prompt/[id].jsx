@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { useState, useEffect } from 'react'
 import styles from './prompt.module.css'
+import Image from 'next/image'
 
 function Generate({ id }) {
   const router = useRouter()
@@ -37,27 +38,15 @@ function Generate({ id }) {
       })
     }
   })
+  const generateEnabled = user && !isLoadingUser && credits > 0 && !isGenerating
   return (
     <div>
-      {user ? (
-        <div>
-          <p>Authenticated user: {JSON.stringify(user)}</p>
-          {credits > 0 && (
-            <p>
-              <button onClick={generate} disabled={isGenerating}>
-                Generate
-              </button>{' '}
-              (you have {credits} credits)
-            </p>
-          )}
-          {credits === 0 && <p>No credits!</p>}
-          {credits === null && <p>Loading credits...</p>}
-        </div>
-      ) : (
-        <p>
-          <Link href="/api/auth/login">sign-in required</Link>
-        </p>
-      )}
+      <button onClick={generate} disabled={!generateEnabled}>
+        Generate
+      </button>
+      {credits > 0 && <> (you have {credits} credits)</>}
+      {credits === 0 && <>No credits!</>}
+      {user && credits === null && <>Loading credits...</>}
     </div>
   )
 }
@@ -66,7 +55,7 @@ export function Avatar({ user }) {
   const { picture, nickname } = user
   return (
     <>
-      by <img className={styles.avatar} src={picture} alt="Avatar" />
+      <img className={styles.avatar} src={picture} alt="Avatar" />
       {nickname}
     </>
   )
@@ -89,7 +78,7 @@ export function UserAuth() {
       )}
       {user && (
         <p>
-          Signed in as <Avatar user={user} />{' '}
+          signed-in as <Avatar user={user} />{' '}
           <Link href="/api/auth/logout">sign-out</Link>
         </p>
       )}
@@ -105,18 +94,21 @@ export default function Page({ id, prompt }) {
   const { prompt: promptText, body, user, parent, children, timestamp } = prompt
   return (
     <div>
-      <h1>{promptText}</h1>
-      {parent && (
-        <p>
-          Parent: <Link href={parent}>{parent}</Link>
-        </p>
-      )}
+      <h1>
+        <Image
+          className={styles.gopher}
+          src="/gopher.png"
+          width={940}
+          height={940}
+        />
+        {promptText}
+      </h1>
       {body && <p>{body}</p>}
       {!body && <p>Not generated, yet.</p>}
       {!body && <Generate id={id} />}
       {user && (
         <p>
-          <Avatar user={user} />
+          by <Avatar user={user} />
           {timestamp && <> at {new Date(timestamp).toUTCString()}</>}
         </p>
       )}
@@ -128,6 +120,11 @@ export default function Page({ id, prompt }) {
             </li>
           ))}
         </ol>
+      )}
+      {parent && (
+        <p>
+          Parent: <Link href={parent}>{parent}</Link>
+        </p>
       )}
       <UserAuth />
     </div>
