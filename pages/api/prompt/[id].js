@@ -21,7 +21,6 @@ export default withApiAuthRequired(async function handler(req, res) {
     return
   }
   const userCredits = await getUserCredits(user.sub)
-  console.log('generating prompt response; user credits', userCredits)
   if (!userCredits) {
     console.log('no credits')
     res.status(401).end()
@@ -42,11 +41,10 @@ export default withApiAuthRequired(async function handler(req, res) {
       await setPrompt(childId, child)
     }
     prompt.user = user
-    console.log('new prompt', prompt)
+    prompt.timestamp = new Date().toISOString()
     await setPrompt(id, prompt)
     await res.revalidate(`/prompt/${id}`)
     const credits = await decrementUserCredits(user.sub)
-    console.log('credits remain', credits)
     session.credits = credits
     await updateSession(req, res, session)
   }

@@ -1,12 +1,14 @@
 import { useRouter } from 'next/router'
 import { getPrompt } from '@/lib/data'
 import Link from 'next/link'
-import { UserProvider, useUser } from '@auth0/nextjs-auth0/client'
+import { useUser } from '@auth0/nextjs-auth0/client'
 import { useState, useEffect } from 'react'
+import TimeAgo from 'javascript-time-ago'
+import styles from './prompt.module.css'
 
-function Generate({ id, prompt }) {
+function Generate({ id }) {
   const router = useRouter()
-  const { user, error, isLoading } = useUser()
+  const { user, error: userError, isLoading: isLoadingUser } = useUser()
   const [credits, setCredits] = useState(null)
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -22,30 +24,21 @@ function Generate({ id, prompt }) {
       console.log(err)
     }
   }
-  useEffect(() => {
-    fetch(`/api/credits`).then(async (res) => {
-      const data = await res.json()
-      if (res.status == 200) {
-        setCredits(data)
-      }
+  if (!isLoadingUser) {
+    useEffect(() => {
+      fetch(`/api/credits`).then(async (res) => {
+        const data = await res.json()
+        if (res.status == 200) {
+          setCredits(data)
+        }
+      })
     })
-  })
-  if (isLoading) {
-    return <div>Loading user...</div>
   }
-  if (error) {
-    console.error(error)
-    return <div>{error.message}</div>
+  if (userError) {
+    console.error('User error', error)
   }
   return (
     <div>
-      <h1>Input prompt: {prompt.prompt}</h1>
-      <p>
-        Parent prompt:{' '}
-        {(prompt.parent && <Link href={prompt.parent}>{prompt.parent}</Link>) ||
-          'none'}
-      </p>
-      <p>Not generated, yet.</p>
       {user ? (
         <div>
           <p>Authenticated user: {JSON.stringify(user)}</p>
@@ -64,45 +57,53 @@ function Generate({ id, prompt }) {
           </p>
         </div>
       ) : (
-        <div>
-          <p>sign-in required</p>
-          <Link href="/api/auth/login">Login</Link>
-        </div>
+        <p>
+          <Link href="/api/auth/login">sign-in required</Link>
+        </p>
       )}
     </div>
   )
 }
+
+TimeAgo.addDefaultLocale(en)
+import en from 'javascript-time-ago/locale/en'
+const timeAgo = new TimeAgo('en-US')
 
 export default function Page({ id, prompt }) {
   const router = useRouter()
   if (router.isFallback) {
     return <div>Loading...</div>
   }
-  if (!prompt.body) {
-    return (
-      <UserProvider>
-        <Generate id={id} prompt={prompt} />
-      </UserProvider>
-    )
-  }
+  const { prompt: promptText, body, user, parent, children, timestamp } = prompt
   return (
     <div>
-      <h1>Input prompt: {prompt.prompt}</h1>
-      <p>Body: {prompt.body}</p>
-      <p>Created by user:{JSON.stringify(prompt.user)}</p>
-      <p>
-        Parent prompt:{' '}
-        {(prompt.parent && <Link href={prompt.parent}>{prompt.parent}</Link>) ||
-          'none'}
-      </p>
-      <p>Do you want to know more?</p>
-      <ol>
-        {prompt.children.map((child) => (
-          <li key={child.id}>
-            <Link href={child.id}>{child.prompt}</Link>
-          </li>
-        ))}
-      </ol>
+      <h1>{promptText}</h1>
+      {parent && (
+        <p>
+          Parent: <Link href={parent}>{parent}</Link>
+        </p>
+      )}
+      {body && <p>{body}</p>}
+      {!body && <p>Not generated, yet.</p>}
+      {!body && <Generate id={id} />}
+      {user && (
+        <>
+          <p>
+            By: {user.nickname}
+            <img className={styles.avatar} src={user.picture} alt="Avatar" />
+            {timestamp && <>{timeAgo.format(new Date(timestamp))}</>}
+          </p>
+        </>
+      )}
+      {children && (
+        <ol>
+          {prompt.children.map((child) => (
+            <li key={child.id}>
+              <Link href={child.id}>{child.prompt}</Link>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   )
 }
@@ -110,7 +111,7 @@ export default function Page({ id, prompt }) {
 export const getStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking',
+    fallback: true,
   }
 }
 

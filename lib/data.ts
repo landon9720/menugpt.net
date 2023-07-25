@@ -13,6 +13,7 @@ export interface Prompt {
   children?: [{ id: string; prompt: string }]
   user?: any
   parent?: string
+  timestamp?: string
 }
 
 function promptKey(id: string): string {

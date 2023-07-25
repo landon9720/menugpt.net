@@ -1,11 +1,14 @@
 import type { AppProps } from 'next/app'
 import { Analytics } from '@vercel/analytics/react'
 import Script from 'next/script'
+import { UserProvider } from '@auth0/nextjs-auth0/client'
 
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <Component {...pageProps} />
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
       <Analytics />
       <Script
         async
@@ -16,5 +19,3 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   )
 }
-
-export default MyApp
