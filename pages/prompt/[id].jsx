@@ -107,13 +107,14 @@ export default function Page({ id, prompt }) {
           src="/gopher.png"
           width={940}
           height={940}
+          alt="Gopher logo"
         />
         {promptText}
       </h1>
       {body && <p>{body}</p>}
       {!body && (
         <p className={styles.notGeneratedYet}>
-          This page's content has not been generated, yet.
+          This page&apos;s content has not been generated, yet.
         </p>
       )}
       {!body && <Generate id={id} />}
