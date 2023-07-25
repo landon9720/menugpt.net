@@ -112,7 +112,7 @@ export default function Page({ id, prompt }) {
 
 export const getStaticPaths = async () => {
   return {
-    paths: [{ params: { id: '1' } }],
+    paths: [],
     fallback: true,
   }
 }
