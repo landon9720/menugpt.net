@@ -113,13 +113,12 @@ export default function Page({ id, prompt }) {
 export const getStaticPaths = async () => {
   return {
     paths: [],
-    fallback: true,
+    fallback: "blocking",
   }
 }
 
 export const getStaticProps = async ({ params: { id } }) => {
   var prompt = await getPrompt(id)
-  console.log('prompt', prompt)
   if (!prompt) {
     return {
       notFound: true,
