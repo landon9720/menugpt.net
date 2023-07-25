@@ -27,10 +27,10 @@ export default withApiAuthRequired(async function handler(req, res) {
     return
   }
   if (!prompt.body) {
-    prompt.body = gen.generateWords(7)
+    prompt.body = gen.generateWords(37)
     prompt.children = []
     for (var i = 0; i < 10; ++i) {
-      const childPromptInput = gen.generateWords(3)
+      const childPromptInput = gen.generateWords(8)
       const childId = md5(childPromptInput)
       const child = {
         id: childId,

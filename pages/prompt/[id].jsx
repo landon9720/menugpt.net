@@ -70,19 +70,24 @@ export function UserAuth() {
     console.error('user error', error)
   }
   return (
-    <p>
+    <footer>
       {!user && (
         <p>
-          <Link href="/api/auth/login">sign-in</Link> to generate content
+          <Link className={styles.authLink} href="/api/auth/login">
+            [&#8594; sign-in]
+          </Link>{' '}
+          to generate content
         </p>
       )}
       {user && (
         <p>
           signed-in as <Avatar user={user} />{' '}
-          <Link href="/api/auth/logout">sign-out</Link>
+          <Link className={styles.authLink} href="/api/auth/logout">
+            [&#8592; sign-out]
+          </Link>
         </p>
       )}
-    </p>
+    </footer>
   )
 }
 
@@ -97,11 +102,11 @@ export default function Page({ id, prompt }) {
       {parent && (
         <p>
           <Link className={styles.parentLink} href={parent}>
-            [ &#8593; parent]
+            [&#8593; parent]
           </Link>
         </p>
       )}
-      <h1>
+      <header className={styles.head}>
         <Image
           className={styles.gopher}
           src="/gopher.png"
@@ -109,8 +114,8 @@ export default function Page({ id, prompt }) {
           height={940}
           alt="Gopher logo"
         />
-        {promptText}
-      </h1>
+        <h1>{promptText}</h1>
+      </header>
       {body && <p>{body}</p>}
       {!body && (
         <p className={styles.notGeneratedYet}>

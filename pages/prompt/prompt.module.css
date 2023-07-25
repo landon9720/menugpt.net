@@ -2,8 +2,13 @@ a.parentLink {
   font-size: smaller;
 }
 
+header.head {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
 img.gopher {
-  vertical-align: middle;
   width: 4rem;
   height: 4rem;
   margin: 1rem;
@@ -17,4 +22,8 @@ img.avatar {
   vertical-align: middle;
   width: 2rem;
   height: 2rem;
+}
+
+a.authLink {
+  font-size: smaller;
 }
