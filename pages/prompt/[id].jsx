@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Top from '../Top'
 import styles from './prompt.module.css'
+import ReactMarkdown from 'react-markdown'
 
 function Generate({ id }) {
   const router = useRouter()
@@ -101,7 +102,7 @@ export default function Page({ id, prompt }) {
         </p>
       )}
       <Top text={promptText} />
-      {body && <p>{body}</p>}
+      {body && <ReactMarkdown>{body}</ReactMarkdown>}
       {!body && (
         <p className={styles.notGeneratedYet}>
           This page&apos;s content has not been generated, yet.
