@@ -1,8 +1,8 @@
 import { useUser } from '@auth0/nextjs-auth0/client'
 import Link from 'next/link'
-import { Avatar } from './Avatar'
+import Avatar from './Avatar'
 
-export function UserAuth() {
+export default function UserAuth() {
   const { user, error, isLoading } = useUser()
   if (isLoading) {
     return <p>Loading...</p>

@@ -4,7 +4,7 @@ import {
   SUGGESTION_SYSTEM_PROMPT,
 } from '@/lib/globals'
 import Link from 'next/link'
-import Top from './Top'
+import Top from '../src/Top'
 import styles from './faq.module.css'
 
 export default function Index() {

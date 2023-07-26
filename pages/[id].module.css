@@ -1,3 +1,7 @@
 p.notGeneratedYet {
   font-style: italic;
 }
+
+ol.children li {
+  margin: 0.2rem;
+}

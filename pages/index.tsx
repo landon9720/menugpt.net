@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import Top from './Top'
+import Top from '../src/Top'
 
 export default function Index() {
   const router = useRouter()

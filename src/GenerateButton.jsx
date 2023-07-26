@@ -2,7 +2,7 @@ import { useUser } from '@auth0/nextjs-auth0/client'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-export function GenerateButton({ id }) {
+export default function GenerateButton({ id }) {
   const router = useRouter()
   const { user, error: userError, isLoading: isLoadingUser } = useUser()
   const [credits, setCredits] = useState(null)
@@ -17,7 +17,7 @@ export function GenerateButton({ id }) {
       setIsGenerating(true)
       const res = await fetch(`/api/prompt/${id}`)
       if (res.status == 200) {
-        setTimeout(() => router.reload(), 500)
+        setTimeout(() => router.reload(), 600)
       }
     } catch (err) {
       setIsGenerating(false)

@@ -1,12 +1,12 @@
 import { getPrompt } from '@/lib/data'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import Top from './Top'
-import styles from './page.module.css'
+import Top from '../src/Top'
+import styles from './[id].module.css'
 import ReactMarkdown from 'react-markdown'
-import { Avatar } from './Avatar'
-import { UserAuth } from './UserAuth'
-import { GenerateButton } from './GenerateButton'
+import Avatar from '../src/Avatar'
+import UserAuth from '../src/UserAuth'
+import GenerateButton from '../src/GenerateButton'
 
 export default function Page({ id, prompt }) {
   const router = useRouter()
@@ -36,7 +36,7 @@ export default function Page({ id, prompt }) {
         </p>
       )}
       {children && (
-        <ol>
+        <ol className={styles.children}>
           {prompt.children.map((child) => (
             <li key={child.id}>
               <Link href={child.id}>{child.prompt}</Link>

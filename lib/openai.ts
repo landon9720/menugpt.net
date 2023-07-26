@@ -27,7 +27,7 @@ export async function generatePromptChildren(
 ): Promise<string[]> {
   const options = await callOpenAiApi([
     {
-      role: 'user',
+      role: 'assistant',
       content: promptInput,
     },
     {

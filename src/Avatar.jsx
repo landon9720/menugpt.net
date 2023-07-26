@@ -1,6 +1,6 @@
 import styles from './avatar.module.css'
 
-export function Avatar({ user }) {
+export default function Avatar({ user }) {
   const { picture, nickname } = user
   return (
     <>
