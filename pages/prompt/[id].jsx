@@ -45,8 +45,8 @@ function Generate({ id }) {
         Generate
       </button>
       {credits > 0 && <> (you have {credits} credits)</>}
-      {credits === 0 && <>No credits!</>}
-      {user && credits === null && <>Loading credits...</>}
+      {credits === 0 && <> No credits!</>}
+      {user && credits === null && <> Loading credits...</>}
     </p>
   )
 }
@@ -73,18 +73,14 @@ export function UserAuth() {
     <footer>
       {!user && (
         <p>
-          <Link className={styles.authLink} href="/api/auth/login">
-            [&#8594; sign-in]
-          </Link>{' '}
-          to generate content
+          <Link href="/api/auth/login">[&#8594; sign-in]</Link> to generate
+          content
         </p>
       )}
       {user && (
         <p>
           signed-in as <Avatar user={user} />{' '}
-          <Link className={styles.authLink} href="/api/auth/logout">
-            [&#8592; sign-out]
-          </Link>
+          <Link href="/api/auth/logout">[&#8592; sign-out]</Link>
         </p>
       )}
     </footer>
@@ -101,9 +97,7 @@ export default function Page({ id, prompt }) {
     <div>
       {parent && (
         <p>
-          <Link className={styles.parentLink} href={parent}>
-            [&#8593; parent]
-          </Link>
+          <Link href={parent}>[&#8593; parent]</Link>
         </p>
       )}
       <header className={styles.head}>
