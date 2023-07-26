@@ -17,7 +17,7 @@ export default function GenerateButton({ id }) {
       setIsGenerating(true)
       const res = await fetch(`/api/prompt/${id}`)
       if (res.status == 200) {
-        setTimeout(() => router.reload(), 600)
+        setTimeout(() => router.reload(), 1000)
       }
     } catch (err) {
       setIsGenerating(false)
