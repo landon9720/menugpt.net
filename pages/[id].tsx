@@ -56,7 +56,11 @@ export const getStaticPaths = async () => {
   }
 }
 
-export const getStaticProps = async ({ params: { id } }) => {
+export const getStaticProps = async ({
+  params: { id },
+}: {
+  params: { id: string }
+}) => {
   var prompt = await getPrompt(id)
   if (!prompt) {
     return {
