@@ -1,4 +1,5 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai'
+import { BODY_SYSTEM_PROMPT, SUGGESTION_SYSTEM_PROMPT } from './globals'
 
 const openai = new OpenAIApi(
   new Configuration({
@@ -7,12 +8,6 @@ const openai = new OpenAIApi(
 )
 
 export async function generatePromptBody(promptInput: string): Promise<string> {
-  const bodySystemPrompt = [
-    'Provide an article, essay, blog-post, or comment.',
-    'Be brief, informative, on-topic.',
-    'Optionally include subtle humor, puns, and non-sequiturs.',
-    'Produce 1-2 short paragraphs with 1-4 sentences each.',
-  ].join(' ')
   const body = await callOpenAiApi([
     {
       role: 'user',
@@ -20,7 +15,7 @@ export async function generatePromptBody(promptInput: string): Promise<string> {
     },
     {
       role: 'system',
-      content: bodySystemPrompt,
+      content: BODY_SYSTEM_PROMPT,
     },
   ])
   return body
@@ -30,14 +25,6 @@ export async function generatePromptChildren(
   promptInput: string,
   promptBody: string,
 ): Promise<string[]> {
-  const suggestionSystemPrompt = [
-    'Provide a menu of options.',
-    'Each option is a choice the user may select to continue this conversation.',
-    'Each option can be serious, practical, humorous, unexpected, whimsical, comedic, or punny.',
-    'Each option can be on topic, tangential, related, unrelated, generalizations, or specializations.',
-    'Each option must be brief.',
-    'Provide options for the next message to be sent by the user.',
-  ].join(' ')
   const options = await callOpenAiApi([
     {
       role: 'user',
@@ -49,7 +36,7 @@ export async function generatePromptChildren(
     },
     {
       role: 'system',
-      content: suggestionSystemPrompt,
+      content: SUGGESTION_SYSTEM_PROMPT,
     },
   ])
   return options.split('\n').flatMap((line) => {

@@ -7,9 +7,8 @@ import {
 } from '@auth0/nextjs-auth0'
 
 import { getUserCredits, setUserCredits } from '@/lib/data'
+import { NEW_USER_CREDITS } from '@/lib/globals'
 import { NextApiRequest, NextApiResponse } from 'next'
-
-const NEW_USER_CREDITS = 100
 
 export default handleAuth({
   async login(req: NextApiRequest, res: NextApiResponse): Promise<void> {
