@@ -1,4 +1,5 @@
 import {
+  Session,
   handleAuth,
   handleCallback,
   handleLogin,
@@ -6,19 +7,23 @@ import {
 } from '@auth0/nextjs-auth0'
 
 import { getUserCredits, setUserCredits } from '@/lib/data'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-const NEW_USER_CREDITS = 10
+const NEW_USER_CREDITS = 100
 
 export default handleAuth({
-  async login(req, res) {
-    console.log('req.referer', req.headers.referer)
+  async login(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     await handleLogin(req, res, {
       returnTo: req.headers.referer,
     })
   },
-  async callback(req, res) {
+  async callback(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     await handleCallback(req, res, {
-      afterCallback: async function (req, res, session) {
+      afterCallback: async function (
+        _1: NextApiRequest,
+        _2: NextApiResponse,
+        session: Session,
+      ): Promise<Session> {
         const userId = session.user.sub
         let credits = await getUserCredits(userId)
         if (credits === null) {
@@ -33,10 +38,11 @@ export default handleAuth({
       },
     })
   },
-  async logout(req, res) {
-    console.log('req.referer', req.headers.referer)
+  async logout(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const ref = req.headers.referer
+    const returnTo = ref ? '/?homeRedirectTo=' + encodeURIComponent(ref) : '/'
     await handleLogout(req, res, {
-      returnTo: '/?homeRedirectTo=' + encodeURIComponent(req.headers.referer),
+      returnTo,
     })
   },
 })
