@@ -1,4 +1,4 @@
-import { getPrompt } from '@/lib/data'
+import { Prompt, getPrompt } from '@/lib/data'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Top from '../src/Top'
@@ -8,7 +8,7 @@ import Avatar from '../src/Avatar'
 import UserAuth from '../src/UserAuth'
 import GenerateButton from '../src/GenerateButton'
 
-export default function Page({ id, prompt }) {
+export default function Page({ id, prompt }: { id: String; prompt: Prompt }) {
   const router = useRouter()
   if (router.isFallback) {
     return <p>Loading...</p>
@@ -37,14 +37,14 @@ export default function Page({ id, prompt }) {
       )}
       {children && (
         <ol className={styles.children}>
-          {prompt.children.map((child) => (
+          {prompt.children?.map((child) => (
             <li key={child.id}>
               <Link href={child.id}>{child.prompt}</Link>
             </li>
           ))}
         </ol>
       )}
-      <UserAuth />
+      {!body && <UserAuth />}
     </div>
   )
 }
