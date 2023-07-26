@@ -12,7 +12,7 @@ export default function Index() {
     <>
       <Top text={'Welcome to MenuGpt.net'} />
       <p>
-        <Link href="prompt/1">Start here</Link>
+        <Link href="1">Start here</Link>
       </p>
       <p>
         <Link href="faq">Frequently asked questions (FAQ)</Link>

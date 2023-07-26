@@ -63,7 +63,7 @@ export default withApiAuthRequired(async function handler(
   prompt.user = user
   prompt.timestamp = new Date().toISOString()
   await setPrompt(id, prompt)
-  await res.revalidate(`/prompt/${id}`)
+  await res.revalidate(`/${id}`)
   const credits = await decrementUserCredits(user.sub)
   session.credits = credits
   await updateSession(req, res, session)
