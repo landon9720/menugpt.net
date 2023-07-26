@@ -8,10 +8,9 @@ export const BODY_SYSTEM_PROMPT = [
 ].join(' ')
 
 export const SUGGESTION_SYSTEM_PROMPT = [
-  'Provide a menu of options.',
-  'Each option is a choice the user may select to continue this conversation.',
-  'Each option can be serious, practical, humorous, unexpected, whimsical, comedic, or punny.',
-  'Each option can be on topic, tangential, related, unrelated, generalizations, or specializations.',
-  'Each option must be brief.',
-  'Provide options for the next message to be sent by the user.',
+  'Provide a menu of choices.',
+  'Each is a choice the user may select to continue this conversation.',
+  'Be serious, practical, humorous, unexpected, whimsical, comedic, or punny.',
+  'Be brief.',
+  'Produce 3-7 choices.',
 ].join(' ')
