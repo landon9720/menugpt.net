@@ -18,7 +18,7 @@ export default function Index() {
         Each page of the conversation is generated on-demand by users.{' '}
         <Link href="https://platform.openai.com/docs/api-reference/completions">
           OpenAI Chat Completion API
-        </Link>
+        </Link>{' '}
         is used to generate page content.
       </p>
       <p className={styles.question}>What internal pre-prompting is used?</p>
