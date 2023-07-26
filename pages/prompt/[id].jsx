@@ -40,10 +40,11 @@ function Generate({ id }) {
     }
   })
   const generateEnabled = user && !isLoadingUser && credits > 0 && !isGenerating
+  const buttonLabel = isGenerating ? 'Generating, please wait...' : 'Generate'
   return (
     <p>
       <button onClick={generate} disabled={!generateEnabled}>
-        Generate
+        {buttonLabel}
       </button>
       {credits > 0 && <> (you have {credits} credits)</>}
       {credits === 0 && <> No credits!</>}
