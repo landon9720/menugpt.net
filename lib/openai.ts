@@ -11,7 +11,7 @@ export async function generatePromptBody(promptInput: string): Promise<string> {
     'Provide an article, essay, blog-post, or comment.',
     'Be brief, informative, on-topic.',
     'Optionally include subtle humor, puns, and non-sequiturs.',
-    'Produce 1-2 short paragraphs.',
+    'Produce 1-2 short paragraphs with 1-4 sentences each.',
   ].join(' ')
   const body = await callOpenAiApi([
     {
@@ -57,6 +57,10 @@ export async function generatePromptChildren(
     if (/^\d+\.\s+/.test(line)) {
       line = line.replace(/^\d+\.\s+/, '')
     }
+    // Remove quotes
+    if (line.startsWith('"') && line.endsWith('"')) {
+      line = line.slice(1, -1)
+    }
     // Remove whitespace
     line = line.trim()
     // Only use nonempty strings
@@ -76,7 +80,7 @@ async function callOpenAiApi(
     messages,
     temperature: 1.0, // 0-2
     n: 1, // number of choices
-    max_tokens: 200, // number of tokens to generate
+    max_tokens: 300, // number of tokens to generate
   })
   const result = chatCompletion.data
   const message = result.choices[0].message?.content
