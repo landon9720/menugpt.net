@@ -67,7 +67,7 @@ async function callOpenAiApi(
     messages,
     temperature: 0.8, // 0-2
     n: 1, // number of choices
-    max_tokens: 200, // number of tokens to generate
+    max_tokens: 250, // number of tokens to generate
   })
   const result = chatCompletion.data
   const message = result.choices[0].message?.content
