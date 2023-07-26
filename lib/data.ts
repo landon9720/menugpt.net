@@ -10,7 +10,7 @@ db.connect()
 export interface Prompt {
   prompt: string
   body?: string
-  children?: [{ id: string; prompt: string }]
+  children?: { id: string; prompt: string; parent: string }[]
   user?: any
   parent?: string
   timestamp?: string
