@@ -1,0 +1,11 @@
+header.head {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+img.gopher {
+  width: 4rem;
+  height: 4rem;
+  margin: 1rem;
+}

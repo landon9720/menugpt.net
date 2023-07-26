@@ -1,13 +1,16 @@
-import { LoremIpsum } from 'lorem-ipsum'
 import {
-  getPrompt,
-  setPrompt,
-  getUserCredits,
   decrementUserCredits,
+  getPrompt,
+  getUserCredits,
+  setPrompt,
 } from '@/lib/data'
+import {
+  getSession,
+  updateSession,
+  withApiAuthRequired,
+} from '@auth0/nextjs-auth0'
+import { LoremIpsum } from 'lorem-ipsum'
 import md5 from 'md5'
-import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
-import { updateSession } from '@auth0/nextjs-auth0'
 
 const gen = new LoremIpsum()
 

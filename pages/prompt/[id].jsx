@@ -1,10 +1,11 @@
-import { useRouter } from 'next/router'
 import { getPrompt } from '@/lib/data'
-import Link from 'next/link'
 import { useUser } from '@auth0/nextjs-auth0/client'
-import { useState, useEffect } from 'react'
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import Top from '../Top'
 import styles from './prompt.module.css'
-import Image from 'next/image'
 
 function Generate({ id }) {
   const router = useRouter()
@@ -100,16 +101,7 @@ export default function Page({ id, prompt }) {
           <Link href={parent}>[&#8593; parent]</Link>
         </p>
       )}
-      <header className={styles.head}>
-        <Image
-          className={styles.gopher}
-          src="/gopher.png"
-          width={940}
-          height={940}
-          alt="Gopher logo"
-        />
-        <h1>{promptText}</h1>
-      </header>
+      <Top text={promptText} />
       {body && <p>{body}</p>}
       {!body && (
         <p className={styles.notGeneratedYet}>
