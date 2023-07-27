@@ -50,7 +50,7 @@ export default function GenerateButton({ id }) {
   if (isGenerating) {
     generateLabel = 'Generating, please wait...'
   } else if (errorGenerating) {
-    generateLabel = 'Error generating :-( Refresh and try again?'
+    generateLabel = 'Error generating :-( Sign-out, then in, and try again?'
   } else if (isDoneGenerating) {
     generateLabel = 'Ready to refresh!'
   }
