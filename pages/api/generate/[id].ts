@@ -23,8 +23,7 @@ export default withApiAuthRequired(async function handler(
     res.status(401).end()
     return
   }
-  const sessionUser = session.user
-  const user = await getUser(sessionUser.sub)
+  const user = await getUser(session.user.sub)
   if (!user?.credits) {
     res.status(401).end()
     return
@@ -59,10 +58,10 @@ export default withApiAuthRequired(async function handler(
     }
     await setPrompt(child)
   }
-  prompt.user_id = sessionUser.sub
+  prompt.user_id = user.user_id
   await setPrompt(prompt)
   await res.revalidate(`/${id}`)
-  const credits = await decrementUserCredits(sessionUser.sub)
+  const credits = await decrementUserCredits(user.user_id)
   session.credits = credits
   await updateSession(req, res, session)
   res.status(200).end()
