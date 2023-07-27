@@ -1,11 +1,11 @@
 import { Client } from 'pg'
 
 const dbConfig = {
-  user: 'menugptnet',
   host: '127.0.0.1',
-  database: 'landon9720',
-  password: 'menugptnet',
   port: 5432,
+  database: 'landon9720',
+  user: 'landon9720',
+  password: 'landon9720',
 }
 
 export interface Prompt {
@@ -55,12 +55,12 @@ export async function setPrompt(prompt: Prompt): Promise<void> {
         prompt.body,
         prompt.input,
         prompt.parent_id,
-        prompt.timestamp,
+        new Date(prompt.timestamp),
       ],
     )
     if (rowCount !== 1) {
       throw new Error(
-        `Unexpected row count inserting or updating prompt ${prompt.prompt_id}`,
+        `Unexpected row count ${rowCount} inserting or updating prompt ${prompt.prompt_id}`,
       )
     }
   } catch (error) {
@@ -104,7 +104,7 @@ export async function decrementUserCredits(userId: string): Promise<number> {
       [userId],
     )
     if (result.rowCount === 0) {
-      throw new Error(`User with ID ${userId} not found.`)
+      throw new Error(`User with ID ${userId} not found`)
     }
     const updatedCredits: number = result.rows[0].credits
     return updatedCredits
@@ -115,19 +115,28 @@ export async function decrementUserCredits(userId: string): Promise<number> {
   }
 }
 
-export async function getUserCredits(userId: string): Promise<number | null> {
+export interface User {
+  user_id: string
+  credits: number
+  nickname: string
+  name: string
+  picture: string
+  locale: string
+  email: string
+}
+
+export async function getUser(userId: string): Promise<User | null> {
   const client = new Client(dbConfig)
   await client.connect()
   try {
-    const { rows } = await client.query(
-      `SELECT credits FROM "user" WHERE user_id = $1`,
+    const { rows, rowCount } = await client.query(
+      `SELECT * FROM "user" WHERE user_id = $1`,
       [userId],
     )
-    if (rows.length === 0) {
-      return null
+    if (rowCount > 1) {
+      throw new Error(`Unexpected row count ${rowCount} getting user ${userId}`)
     }
-    const credits: number = rows[0].credits
-    return credits
+    return rows[0]
   } catch (error) {
     throw new Error(`Error fetching user credits: ${error}`)
   } finally {
@@ -135,22 +144,34 @@ export async function getUserCredits(userId: string): Promise<number | null> {
   }
 }
 
-export async function setUserCredits(
-  userId: string,
-  credits: number,
-): Promise<void> {
+export async function setUser(user: User): Promise<void> {
   const client = new Client(dbConfig)
   await client.connect()
   try {
     const query = `
-      INSERT INTO "user" (user_id, credits)
-      VALUES ($1, $2)
+      INSERT INTO "user" (user_id, credits, nickname, name, picture, locale, email)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       ON CONFLICT (user_id) DO UPDATE
-      SET credits = EXCLUDED.credits
+      SET credits = EXCLUDED.credits,
+          nickname = EXCLUDED.nickname,
+          name = EXCLUDED.name,
+          picture = EXCLUDED.picture,
+          locale = EXCLUDED.picture,
+          email = EXCLUDED.picture
     `
-    const { rowCount } = await client.query(query, [userId, credits])
-    if (rowCount === 0) {
-      throw new Error(`User with ID ${userId} not found.`)
+    const { rowCount } = await client.query(query, [
+      user.user_id,
+      user.credits,
+      user.nickname,
+      user.name,
+      user.picture,
+      user.locale,
+      user.email,
+    ])
+    if (rowCount !== 1) {
+      throw new Error(
+        `Unexpected row count ${rowCount} adding or updating user ${userId}`,
+      )
     }
   } catch (error) {
     throw new Error(`Error updating user credits: ${error}`)

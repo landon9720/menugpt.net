@@ -2,7 +2,7 @@ import {
   Prompt,
   decrementUserCredits,
   getPrompt,
-  getUserCredits,
+  getUser,
   setPrompt,
 } from '@/lib/data'
 import { generatePromptBody, generatePromptChildren } from '@/lib/openai'
@@ -23,9 +23,9 @@ export default withApiAuthRequired(async function handler(
     res.status(401).end()
     return
   }
-  const user = session.user
-  const userCredits = await getUserCredits(user.sub)
-  if (!userCredits) {
+  const sessionUser = session.user
+  const user = await getUser(sessionUser.sub)
+  if (!user?.credits) {
     res.status(401).end()
     return
   }
@@ -56,14 +56,14 @@ export default withApiAuthRequired(async function handler(
       prompt_id: childId,
       input: childPromptInput,
       parent_id: id,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
     }
     await setPrompt(child)
   }
-  prompt.user_id = user.sub
+  prompt.user_id = sessionUser.sub
   await setPrompt(prompt)
   await res.revalidate(`/${id}`)
-  const credits = await decrementUserCredits(user.sub)
+  const credits = await decrementUserCredits(sessionUser.sub)
   session.credits = credits
   await updateSession(req, res, session)
   res.status(200).end()

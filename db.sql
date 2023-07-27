@@ -4,7 +4,12 @@ DROP TABLE IF EXISTS "user" CASCADE;
 
 CREATE TABLE "user" (
     user_id VARCHAR PRIMARY KEY,
-    credits INTEGER NOT NULL DEFAULT 0
+    credits INTEGER NOT NULL DEFAULT 0,
+    nickname VARCHAR NOT NULL,
+    name VARCHAR NOT NULL,
+    picture VARCHAR NOT NULL,
+    locale VARCHAR NOT NULL,
+    email VARCHAR NOT NULL
 );
 
 CREATE TABLE prompt (
