@@ -29,7 +29,6 @@ export default function Page({ id, prompt }: { id: String; prompt: Prompt }) {
         </p>
       )}
       {!body && <GenerateButton id={id} />}
-      {timestamp && <p className={styles.generated}>{new Date(timestamp).toUTCString()}</p>}
       {children && (
         <ol className={styles.children}>
           {prompt.children?.map((child) => (
@@ -40,6 +39,7 @@ export default function Page({ id, prompt }: { id: String; prompt: Prompt }) {
         </ol>
       )}
       {!body && <UserAuth />}
+      {timestamp && <p className={styles.generated}>{new Date(timestamp).toUTCString()}</p>}
     </div>
   )
 }
