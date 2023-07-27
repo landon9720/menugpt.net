@@ -1,45 +1,57 @@
-import { Prompt, getPrompt } from '@/lib/data'
+import { Prompt, getPrompt, getPromptChildren } from '@/lib/data'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Top from '../src/Top'
 import styles from './[id].module.css'
 import ReactMarkdown from 'react-markdown'
-import Avatar from '../src/Avatar'
+import Timestamp from '../src/Timestamp'
 import UserAuth from '../src/UserAuth'
 import GenerateButton from '../src/GenerateButton'
+import PromptList from '@/src/PromptList'
+import Star from '@/src/Star'
+import Head from 'next/head'
 
-export default function Page({ id, prompt }: { id: String; prompt: Prompt }) {
+export default function Page({
+  prompt,
+  children,
+}: {
+  prompt: Prompt
+  children?: Prompt[]
+}) {
   const router = useRouter()
   if (router.isFallback) {
     return <p>Loading...</p>
   }
-  const { prompt: promptText, body, parent, children, timestamp } = prompt
+  const { prompt_id, input, body, parent_id, timestamp } = prompt
   return (
     <div>
-      {parent && (
+      <Head>
+        <title>{input}</title>
+      </Head>
+      {parent_id && (
         <p>
-          <Link href={parent}>[&#8593; parent]</Link>
+          <Link
+            href={parent_id}
+            title="Go to page where this page was generated"
+          >
+            [&#8593; parent]
+          </Link>
         </p>
       )}
-      <Top text={promptText} />
+      <Top text={input} />
       {body && <ReactMarkdown>{body}</ReactMarkdown>}
       {!body && (
         <p className={styles.notGeneratedYet}>
           This page&apos;s content has not been generated, yet.
         </p>
       )}
-      {!body && <GenerateButton id={id} />}
-      {children && (
-        <ol className={styles.children}>
-          {prompt.children?.map((child) => (
-            <li key={child.id}>
-              <Link href={child.id}>{child.prompt}</Link>
-            </li>
-          ))}
-        </ol>
+      {!body && <GenerateButton id={prompt_id} />}
+      {children && <PromptList prompts={children} />}
+      {body && (
+        <Timestamp timestamp={timestamp} title="When this page was generated" />
       )}
-      {!body && <UserAuth />}
-      {timestamp && <p className={styles.generated}>{new Date(timestamp).toUTCString()}</p>}
+      {body && <Star promptId={prompt_id} />}
+      <UserAuth />
     </div>
   )
 }
@@ -56,16 +68,18 @@ export const getStaticProps = async ({
 }: {
   params: { id: string }
 }) => {
-  var prompt = await getPrompt(id)
+  const prompt = await getPrompt(id)
   if (!prompt) {
     return {
       notFound: true,
     }
   }
+  const children = await getPromptChildren(id)
   return {
     props: {
       id,
       prompt,
+      children,
     },
   }
 }

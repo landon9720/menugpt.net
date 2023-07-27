@@ -13,6 +13,7 @@
     "@auth0/nextjs-auth0": "^2.7.0",
     "@types/md5": "^2.3.2",
     "@types/node": "20.4.4",
+    "@types/pg": "^8.10.2",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "@vercel/analytics": "^1.0.1",
@@ -21,11 +22,11 @@
     "md5": "^2.3.0",
     "next": "13.4.12",
     "openai": "^3.3.0",
+    "pg": "^8.11.1",
     "prettier": "^3.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.7",
-    "redis": "^4.6.7",
     "typescript": "5.1.6"
   }
 }

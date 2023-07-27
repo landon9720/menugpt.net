@@ -21,15 +21,11 @@ export default function Index() {
         </Link>{' '}
         is used to generate page content.
       </p>
-      <p className={styles.question}>What internal pre-prompting is used?</p>
-      <p>To generate the page body the following system prompt is used:</p>
-      <blockquote>{BODY_SYSTEM_PROMPT}</blockquote>
-      <p>To generate menu of responses, the following system prompt is used:</p>
-      <blockquote>{SUGGESTION_SYSTEM_PROMPT}</blockquote>
       <p className={styles.question}>Is sign-in required?</p>
       <p>
         Pages are freely visible to anybody on the net. However, sign-in is
-        required to generate additional pages.
+        required to generate additional pages. Sign-in is also required to star
+        pages.
       </p>
       <p className={styles.question}>What are credits?</p>
       <p>
@@ -58,6 +54,11 @@ export default function Index() {
         </Link>
         .
       </p>
+      <p className={styles.question}>What internal pre-prompting is used?</p>
+      <p>To generate the page body the following system prompt is used:</p>
+      <blockquote>{BODY_SYSTEM_PROMPT}</blockquote>
+      <p>To generate menu of responses, the following system prompt is used:</p>
+      <blockquote>{SUGGESTION_SYSTEM_PROMPT}</blockquote>
     </>
   )
 }

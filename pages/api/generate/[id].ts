@@ -1,7 +1,8 @@
 import {
+  Prompt,
   decrementUserCredits,
   getPrompt,
-  getUserCredits,
+  getUser,
   setPrompt,
 } from '@/lib/data'
 import { generatePromptBody, generatePromptChildren } from '@/lib/openai'
@@ -22,9 +23,9 @@ export default withApiAuthRequired(async function handler(
     res.status(401).end()
     return
   }
-  const user = session.user
-  const userCredits = await getUserCredits(user.sub)
-  if (!userCredits) {
+  const sessionUser = session.user
+  const user = await getUser(sessionUser.sub)
+  if (!user?.credits) {
     res.status(401).end()
     return
   }
@@ -42,29 +43,27 @@ export default withApiAuthRequired(async function handler(
     res.status(400).end()
     return
   }
-  const generatedBody = await generatePromptBody(prompt.prompt)
+  const generatedBody = await generatePromptBody(prompt.input)
   const generatedChildren = await generatePromptChildren(
-    prompt.prompt,
+    prompt.input,
     generatedBody,
   )
   prompt.body = generatedBody
-  prompt.children = []
   for (var i = 0; i < generatedChildren.length; ++i) {
     const childPromptInput = generatedChildren[i]
     const childId = md5(id + childPromptInput)
-    const child: { id: string; prompt: string; parent: string } = {
-      id: childId,
-      prompt: childPromptInput,
-      parent: id,
+    const child: Prompt = {
+      prompt_id: childId,
+      input: childPromptInput,
+      parent_id: id,
+      timestamp: new Date().toISOString(),
     }
-    prompt.children[i] = child
-    await setPrompt(childId, child)
+    await setPrompt(child)
   }
-  prompt.user = user
-  prompt.timestamp = new Date().toISOString()
-  await setPrompt(id, prompt)
+  prompt.user_id = sessionUser.sub
+  await setPrompt(prompt)
   await res.revalidate(`/${id}`)
-  const credits = await decrementUserCredits(user.sub)
+  const credits = await decrementUserCredits(sessionUser.sub)
   session.credits = credits
   await updateSession(req, res, session)
   res.status(200).end()

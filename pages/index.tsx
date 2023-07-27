@@ -1,10 +1,33 @@
+import {
+  Prompt,
+  getGeneratedPromptCount,
+  getRecentPrompts,
+  getTopPrompts,
+} from '@/lib/data'
+import PromptList from '@/src/PromptList'
+import Timestamp from '@/src/Timestamp'
+import { GetStaticProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { ChangeEvent, useState } from 'react'
 import Top from '../src/Top'
+import styles from './index.module.css'
 
-export default function Index() {
+interface Props {
+  top: Prompt[]
+  recent: Prompt[]
+  promptCount: number
+  timestamp: string
+}
+
+export default function Index({ top, recent, timestamp, promptCount }: Props) {
   const router = useRouter()
   const homeRedirectTo = router.query.homeRedirectTo as string
+  type View = 'top' | 'recent'
+  const [view, setView] = useState<View>('top')
+  const go = (event: ChangeEvent<HTMLSelectElement>) => {
+    setView(event.target.value as View)
+  }
   if (homeRedirectTo) {
     router.replace(homeRedirectTo)
   }
@@ -12,11 +35,37 @@ export default function Index() {
     <>
       <Top text={'Welcome to MenuGpt.net'} />
       <p>
-        <Link href="1">Start here</Link>
-      </p>
-      <p>
         <Link href="faq">Frequently asked questions (FAQ)</Link>
       </p>
+      <p>
+        <select className={styles.view} onChange={go}>
+          <option value="top">Top</option>
+          <option value="recent">Recent</option>
+        </select>
+      </p>
+      <PromptList prompts={view === 'top' ? top : recent} />
+      <p>MenuGpt.net has {promptCount} pages generated.</p>
+      <Timestamp
+        timestamp={timestamp}
+        title="When this page was last generated"
+      />
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const [top, recent, promptCount] = await Promise.all([
+    getTopPrompts(),
+    getRecentPrompts(),
+    getGeneratedPromptCount(),
+  ])
+  return {
+    props: {
+      top,
+      recent,
+      promptCount,
+      timestamp: new Date().toISOString(),
+    },
+    revalidate: 60,
+  }
 }
