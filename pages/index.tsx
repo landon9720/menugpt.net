@@ -5,6 +5,8 @@ import { GetStaticProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Top from '../src/Top'
+import { ChangeEvent, ChangeEventHandler, useState } from 'react'
+import styles from './index.module.css'
 
 interface Props {
   top: Prompt[]
@@ -15,6 +17,11 @@ interface Props {
 export default function Index({ top, recent, timestamp }: Props) {
   const router = useRouter()
   const homeRedirectTo = router.query.homeRedirectTo as string
+  type View = 'top' | 'recent'
+  const [view, setView] = useState<View>('top')
+  const go = (event: ChangeEvent<HTMLSelectElement>) => {
+    setView(event.target.value as View)
+  }
   if (homeRedirectTo) {
     router.replace(homeRedirectTo)
   }
@@ -24,10 +31,13 @@ export default function Index({ top, recent, timestamp }: Props) {
       <p>
         <Link href="faq">Frequently asked questions (FAQ)</Link>
       </p>
-      <h3>Top</h3>
-      <PromptList prompts={top} />
-      <h3>Recent</h3>
-      <PromptList prompts={recent} />
+      <p>
+        <select className={styles.view} onChange={go}>
+          <option value="top">Top</option>
+          <option value="recent">Recent</option>
+        </select>
+      </p>
+      <PromptList prompts={view === 'top' ? top : recent} />
       <Timestamp
         timestamp={timestamp}
         title="When this page was last generated"
