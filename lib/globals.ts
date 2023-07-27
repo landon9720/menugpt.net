@@ -7,9 +7,8 @@ export const BODY_SYSTEM_PROMPT = [
 ].join(' ')
 
 export const SUGGESTION_SYSTEM_PROMPT = [
-  'Provide a menu of 3-7 brief choices.',
+  'Provide a menu of 3-7 brief choices for what the user may say next.',
   'Choices may be serious, practical, humorous, unexpected, or whimsical.',
   'Choices should be questions, request more detail, request a new subject, or provide information.',
-  'A choice is what the user may say next.',
   'The user will select a choice to continue this conversation.',
 ].join(' ')
