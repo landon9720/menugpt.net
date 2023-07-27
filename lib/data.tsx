@@ -219,3 +219,56 @@ export async function setUser(user: User): Promise<void> {
     await client.end()
   }
 }
+
+export async function getStar(
+  userId: string,
+  promptId: string,
+): Promise<boolean> {
+  const client = new Client(dbConfig)
+  await client.connect()
+  try {
+    const { rows } = await client.query(
+      `SELECT 1 FROM star WHERE user_id = $1 AND prompt_id = $2 LIMIT 1`,
+      [userId, promptId],
+    )
+    return rows.length > 0
+  } catch (error) {
+    throw new Error(`Error checking star existence: ${error}`)
+  } finally {
+    await client.end()
+  }
+}
+
+export async function setStar(userId: string, promptId: string): Promise<void> {
+  const client = new Client(dbConfig)
+  await client.connect()
+  try {
+    await client.query(
+      `INSERT INTO star (user_id, prompt_id) VALUES ($1, $2)
+       ON CONFLICT (user_id, prompt_id) DO NOTHING`,
+      [userId, promptId],
+    )
+  } catch (error) {
+    throw new Error(`Error adding star: ${error}`)
+  } finally {
+    await client.end()
+  }
+}
+
+export async function unsetStar(
+  userId: string,
+  promptId: string,
+): Promise<void> {
+  const client = new Client(dbConfig)
+  await client.connect()
+  try {
+    await client.query(
+      `DELETE FROM star WHERE user_id = $1 AND prompt_id = $2`,
+      [userId, promptId],
+    )
+  } catch (error) {
+    throw new Error(`Error removing star: ${error}`)
+  } finally {
+    await client.end()
+  }
+}

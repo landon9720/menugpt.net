@@ -1,17 +1,14 @@
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import styles from './GenerateButton.module.css'
 
 export default function GenerateButton({ id }) {
   const router = useRouter()
-  const { user, error: userError, isLoading: isLoadingUser } = useUser()
+  const { user, isLoading: isLoadingUser } = useUser()
   const [credits, setCredits] = useState(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDoneGenerating, setIsDoneGenerating] = useState(false)
-
-  if (userError) {
-    console.error('User error', error)
-  }
 
   const generate = async () => {
     try {
@@ -30,36 +27,39 @@ export default function GenerateButton({ id }) {
 
   useEffect(() => {
     if (!isLoadingUser) {
-      fetch(`/api/credits`).then(async (res) => {
-        const data = await res.json()
-        if (res.status == 200) {
+      fetch('/api/credits').then(async (res) => {
+        if (res.status === 200) {
+          const data = await res.json()
           setCredits(data)
         }
       })
     }
   })
 
+  let creditInfo = 'loading credits...'
+  if (credits > 0) {
+    creditInfo = `you have ${credits.toLocaleString()} credits`
+  } else if (credits === 0) {
+    creditInfo = 'no credits!'
+  }
   const generateEnabled = credits > 0 && !isGenerating && !isDoneGenerating
-  let generateLabel = 'Generate'
+  let generateLabel = `Generate for 1 credit (${creditInfo})`
   if (isGenerating) {
     generateLabel = 'Generating, please wait...'
   } else if (isDoneGenerating) {
     generateLabel = 'Ready to refresh!'
   }
   return (
-    <p>
-      {user && (
-        <button onClick={generate} disabled={!generateEnabled}>
+    user && (
+      <p>
+        <button
+          className={styles.generate}
+          onClick={generate}
+          disabled={!generateEnabled}
+        >
           {generateLabel}
         </button>
-      )}
-      {!isGenerating && !isDoneGenerating && (
-        <>
-          {credits > 0 && <> (you have {credits.toLocaleString()} credits)</>}
-          {credits === 0 && <> (no credits!)</>}
-          {user && credits === null && <> (loading credits...)</>}
-        </>
-      )}
-    </p>
+      </p>
+    )
   )
 }

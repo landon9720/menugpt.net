@@ -8,6 +8,7 @@ import Timestamp from '../src/Timestamp'
 import UserAuth from '../src/UserAuth'
 import GenerateButton from '../src/GenerateButton'
 import PromptList from '@/src/PromptList'
+import Star from '@/src/Star'
 
 export default function Page({
   prompt,
@@ -37,8 +38,9 @@ export default function Page({
       )}
       {!body && <GenerateButton id={prompt_id} />}
       {children && <PromptList prompts={children} />}
-      {!body && <UserAuth />}
-      {timestamp && <Timestamp timestamp={timestamp} />}
+      {body && <Timestamp timestamp={timestamp} />}
+      {body && <Star promptId={prompt_id} />}
+      <UserAuth />
     </div>
   )
 }
@@ -56,7 +58,6 @@ export const getStaticProps = async ({
   params: { id: string }
 }) => {
   const prompt = await getPrompt(id)
-  console.log('prompt', prompt)
   if (!prompt) {
     return {
       notFound: true,

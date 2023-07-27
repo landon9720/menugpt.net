@@ -3,19 +3,15 @@ import Link from 'next/link'
 import Avatar from './Avatar'
 
 export default function UserAuth() {
-  const { user, error, isLoading } = useUser()
+  const { user, isLoading } = useUser()
   if (isLoading) {
     return <p>Loading...</p>
-  }
-  if (error) {
-    console.error('user error', error)
   }
   return (
     <footer>
       {!user && (
         <p>
-          <Link href="/api/auth/login">[&#8594; sign-in]</Link> to generate
-          content
+          <Link href="/api/auth/login">[&#8594; sign-in]</Link>
         </p>
       )}
       {user && (
