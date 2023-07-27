@@ -4,12 +4,13 @@ import type { AppProps } from 'next/app'
 import { Alice } from 'next/font/google'
 import Head from 'next/head'
 import Script from 'next/script'
+import styles from './_app.module.css'
 
 const font = Alice({ subsets: ['latin'], weight: '400' })
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <main className={font.className}>
+    <main className={`${font.className} ${styles.main}`}>
       <Head>
         <title>MenuGpt.net</title>
       </Head>
