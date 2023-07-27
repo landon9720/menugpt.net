@@ -54,7 +54,7 @@ export default function GenerateButton({ id }) {
       </button>
       {!isGenerating && !isDoneGenerating && (
         <>
-          {credits > 0 && <> (you have {credits} credits)</>}
+          {credits > 0 && <> (you have {credits.toLocaleString()} credits)</>}
           {credits === 0 && <> (no credits!)</>}
           {user && credits === null && <> (loading credits...)</>}
         </>
