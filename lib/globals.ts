@@ -3,6 +3,7 @@ export const NEW_USER_CREDITS = 100
 export const BODY_SYSTEM_PROMPT = [
   'Be brief, informative, interesting, on-topic.',
   'Include puns, and non-sequiturs.',
+  'Optionally include emoji.',
   'Produce 1-2 short paragraphs with 1-3 short sentences.',
 ].join(' ')
 
