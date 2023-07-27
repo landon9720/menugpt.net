@@ -13,7 +13,7 @@ export default function GenerateButton({ id }) {
   const generate = async () => {
     try {
       setIsGenerating(true)
-      const res = await fetch(`/api/prompt/${id}`)
+      const res = await fetch(`/api/generate/${id}`)
       if (res.status == 200) {
         setIsGenerating(false)
         setIsDoneGenerating(true)
