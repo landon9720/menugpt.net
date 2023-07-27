@@ -4,8 +4,8 @@ import Timestamp from '@/src/Timestamp'
 import { GetStaticProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { ChangeEvent, useState } from 'react'
 import Top from '../src/Top'
-import { ChangeEvent, ChangeEventHandler, useState } from 'react'
 import styles from './index.module.css'
 
 interface Props {
