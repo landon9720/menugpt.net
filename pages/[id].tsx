@@ -1,4 +1,4 @@
-import { ChildPrompt, Prompt, getPrompt, getPromptChildren } from '@/lib/data'
+import { Prompt, getPrompt, getPromptChildren } from '@/lib/data'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Top from '../src/Top'
@@ -7,13 +7,14 @@ import ReactMarkdown from 'react-markdown'
 import Avatar from '../src/Avatar'
 import UserAuth from '../src/UserAuth'
 import GenerateButton from '../src/GenerateButton'
+import PromptList from '@/src/PromptList'
 
 export default function Page({
   prompt,
   children,
 }: {
   prompt: Prompt
-  children?: ChildPrompt[]
+  children?: Prompt[]
 }) {
   const router = useRouter()
   if (router.isFallback) {
@@ -35,15 +36,7 @@ export default function Page({
         </p>
       )}
       {!body && <GenerateButton id={prompt_id} />}
-      {children && (
-        <ol className={styles.children}>
-          {children?.map((child) => (
-            <li key={child.prompt_id}>
-              <Link href={child.prompt_id}>{child.input}</Link>
-            </li>
-          ))}
-        </ol>
-      )}
+      {children && <PromptList prompts={children} />}
       {!body && <UserAuth />}
       {timestamp && (
         <p className={styles.generated}>{new Date(timestamp).toUTCString()}</p>
@@ -65,6 +58,7 @@ export const getStaticProps = async ({
   params: { id: string }
 }) => {
   const prompt = await getPrompt(id)
+  console.log('prompt', prompt)
   if (!prompt) {
     return {
       notFound: true,

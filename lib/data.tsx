@@ -70,24 +70,64 @@ export async function setPrompt(prompt: Prompt): Promise<void> {
   }
 }
 
-export interface ChildPrompt {
-  prompt_id: string
-  input: string
+export async function getTopPrompts(): Promise<Prompt[]> {
+  const client = new Client(dbConfig)
+  await client.connect()
+  try {
+    const { rows } = await client.query(
+      `SELECT p.*, COUNT(s.prompt_id) AS star_count
+       FROM prompt p
+       LEFT JOIN star s ON p.prompt_id = s.prompt_id
+       WHERE body IS NOT NULL
+       GROUP BY p.prompt_id
+       ORDER BY star_count DESC
+       LIMIT 10`,
+    )
+    return rows.map((row) => ({
+      ...row,
+      timestamp: row.timestamp.toUTCString(),
+    }))
+  } catch (error) {
+    throw new Error(`Error fetching top prompts: ${error}`)
+  } finally {
+    await client.end()
+  }
+}
+
+export async function getRecentPrompts(): Promise<Prompt[]> {
+  const client = new Client(dbConfig)
+  await client.connect()
+  try {
+    const { rows } = await client.query(
+      `SELECT * FROM prompt WHERE body IS NOT NULL ORDER BY timestamp DESC LIMIT 10`,
+    )
+    return rows.map((row) => ({
+      ...row,
+      timestamp: row.timestamp.toUTCString(),
+    }))
+  } catch (error) {
+    throw new Error(`Error fetching recent prompts: ${error}`)
+  } finally {
+    await client.end()
+  }
 }
 
 export async function getPromptChildren(
   parentPromptId: string,
-): Promise<ChildPrompt[]> {
+): Promise<Prompt[]> {
   const client = new Client(dbConfig)
   await client.connect()
   try {
-    const { rows } = await client.query<ChildPrompt>(
-      `SELECT prompt_id, input
+    const { rows } = await client.query(
+      `SELECT *
        FROM prompt
        WHERE parent_id = $1`,
       [parentPromptId],
     )
-    return rows
+    return rows.map((row) => ({
+      ...row,
+      timestamp: row.timestamp.toUTCString(),
+    }))
   } catch (error) {
     throw new Error(`Error fetching children of prompt: ${error}`)
   } finally {
@@ -170,7 +210,7 @@ export async function setUser(user: User): Promise<void> {
     ])
     if (rowCount !== 1) {
       throw new Error(
-        `Unexpected row count ${rowCount} adding or updating user ${userId}`,
+        `Unexpected row count ${rowCount} adding or updating user ${user.user_id}`,
       )
     }
   } catch (error) {
