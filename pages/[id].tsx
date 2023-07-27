@@ -1,4 +1,4 @@
-import { Prompt, getPrompt } from '@/lib/data'
+import { ChildPrompt, Prompt, getPrompt, getPromptChildren } from '@/lib/data'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Top from '../src/Top'
@@ -8,38 +8,46 @@ import Avatar from '../src/Avatar'
 import UserAuth from '../src/UserAuth'
 import GenerateButton from '../src/GenerateButton'
 
-export default function Page({ id, prompt }: { id: String; prompt: Prompt }) {
+export default function Page({
+  prompt,
+  children,
+}: {
+  prompt: Prompt
+  children?: ChildPrompt[]
+}) {
   const router = useRouter()
   if (router.isFallback) {
     return <p>Loading...</p>
   }
-  const { prompt: promptText, body, parent, children, timestamp } = prompt
+  const { prompt_id, input, body, parent_id, timestamp } = prompt
   return (
     <div>
-      {parent && (
+      {parent_id && (
         <p>
-          <Link href={parent}>[&#8593; parent]</Link>
+          <Link href={parent_id}>[&#8593; parent]</Link>
         </p>
       )}
-      <Top text={promptText} />
+      <Top text={input} />
       {body && <ReactMarkdown>{body}</ReactMarkdown>}
       {!body && (
         <p className={styles.notGeneratedYet}>
           This page&apos;s content has not been generated, yet.
         </p>
       )}
-      {!body && <GenerateButton id={id} />}
+      {!body && <GenerateButton id={prompt_id} />}
       {children && (
         <ol className={styles.children}>
-          {prompt.children?.map((child) => (
-            <li key={child.id}>
-              <Link href={child.id}>{child.prompt}</Link>
+          {children?.map((child) => (
+            <li key={child.prompt_id}>
+              <Link href={child.prompt_id}>{child.input}</Link>
             </li>
           ))}
         </ol>
       )}
       {!body && <UserAuth />}
-      {timestamp && <p className={styles.generated}>{new Date(timestamp).toUTCString()}</p>}
+      {timestamp && (
+        <p className={styles.generated}>{new Date(timestamp).toUTCString()}</p>
+      )}
     </div>
   )
 }
@@ -56,16 +64,18 @@ export const getStaticProps = async ({
 }: {
   params: { id: string }
 }) => {
-  var prompt = await getPrompt(id)
+  const prompt = await getPrompt(id)
   if (!prompt) {
     return {
       notFound: true,
     }
   }
+  const children = await getPromptChildren(id)
   return {
     props: {
       id,
       prompt,
+      children,
     },
   }
 }
