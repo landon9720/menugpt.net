@@ -1,5 +1,6 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai'
 import { BODY_SYSTEM_PROMPT, SUGGESTION_SYSTEM_PROMPT } from './globals'
+import { Prompt } from './data'
 
 const openai = new OpenAIApi(
   new Configuration({
@@ -7,38 +8,82 @@ const openai = new OpenAIApi(
   }),
 )
 
-export async function generatePromptBody(promptInput: string): Promise<string> {
-  const body = await callOpenAiApi([
-    {
+async function callOpenAiApi(
+  messages: ChatCompletionRequestMessage[],
+): Promise<string> {
+  const chatCompletion = await openai.createChatCompletion({
+    model: 'gpt-3.5-turbo',
+    messages,
+    temperature: 0.8, // 0-2
+    n: 1, // number of choices
+    max_tokens: 250, // number of tokens to generate
+  })
+  const result = chatCompletion.data.choices[0].message?.content
+  if (!result) {
+    throw new Error('Missing result message')
+  }
+  return result
+}
+
+export async function generatePromptBody(
+  input: string,
+  parent?: Prompt,
+): Promise<string> {
+  const messages: ChatCompletionRequestMessage[] = []
+  if (parent) {
+    messages.push({
       role: 'user',
-      content: promptInput,
-    },
-    {
-      role: 'system',
-      content: BODY_SYSTEM_PROMPT,
-    },
-  ])
+      content: parent.input,
+    })
+    messages.push({
+      role: 'assistant',
+      content: parent.body,
+    })
+  }
+  messages.push({
+    role: 'user',
+    content: input,
+  })
+  messages.push({
+    role: 'system',
+    content: BODY_SYSTEM_PROMPT,
+  })
+  const body = await callOpenAiApi(messages)
   return body
 }
 
 export async function generatePromptChildren(
-  promptInput: string,
-  promptBody: string,
+  prompt: Prompt,
+  parent?: Prompt,
 ): Promise<string[]> {
-  const options = await callOpenAiApi([
-    {
+  const messages: ChatCompletionRequestMessage[] = []
+  if (parent) {
+    messages.push({
+      role: 'user',
+      content: parent.input,
+    })
+    messages.push({
       role: 'assistant',
-      content: promptInput,
-    },
-    {
-      role: 'assistant',
-      content: promptBody,
-    },
-    {
-      role: 'system',
-      content: SUGGESTION_SYSTEM_PROMPT,
-    },
-  ])
+      content: parent.body,
+    })
+  }
+  messages.push({
+    role: 'user',
+    content: prompt.input,
+  })
+  messages.push({
+    role: 'assistant',
+    content: prompt.body,
+  })
+  messages.push({
+    role: 'system',
+    content: SUGGESTION_SYSTEM_PROMPT,
+  })
+  const options = await callOpenAiApi(messages)
+  return postProcessOptions(options)
+}
+
+function postProcessOptions(options: string) {
   return options.split('\n').flatMap((line) => {
     // Remove leading list numbering
     if (/^\d+\.\s+/.test(line)) {
@@ -57,22 +102,4 @@ export async function generatePromptChildren(
       return []
     }
   })
-}
-
-async function callOpenAiApi(
-  messages: ChatCompletionRequestMessage[],
-): Promise<string> {
-  const chatCompletion = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    messages,
-    temperature: 0.8, // 0-2
-    n: 1, // number of choices
-    max_tokens: 250, // number of tokens to generate
-  })
-  const result = chatCompletion.data
-  const message = result.choices[0].message?.content
-  if (!message) {
-    throw new Error('Missing message')
-  }
-  return message
 }

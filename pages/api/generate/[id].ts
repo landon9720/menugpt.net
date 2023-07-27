@@ -43,12 +43,11 @@ export default withApiAuthRequired(async function handler(
     res.status(400).end()
     return
   }
-  const generatedBody = await generatePromptBody(prompt.input)
-  const generatedChildren = await generatePromptChildren(
-    prompt.input,
-    generatedBody,
-  )
-  prompt.body = generatedBody
+  const parent =
+    (prompt.parent_id && (await getPrompt(prompt.parent_id))) || undefined
+  prompt.body = await generatePromptBody(prompt.input, parent)
+  const generatedChildren = await generatePromptChildren(prompt, parent)
+
   for (var i = 0; i < generatedChildren.length; ++i) {
     const childPromptInput = generatedChildren[i]
     const childId = md5(id + childPromptInput)
