@@ -39,8 +39,7 @@ export default function GenerateButton({ id }) {
     }
   })
 
-  const generateEnabled =
-    user && !isLoadingUser && credits > 0 && !isGenerating && !isDoneGenerating
+  const generateEnabled = credits > 0 && !isGenerating && !isDoneGenerating
   let generateLabel = 'Generate'
   if (isGenerating) {
     generateLabel = 'Generating, please wait...'
@@ -49,9 +48,11 @@ export default function GenerateButton({ id }) {
   }
   return (
     <p>
-      <button onClick={generate} disabled={!generateEnabled}>
-        {generateLabel}
-      </button>
+      {user && (
+        <button onClick={generate} disabled={!generateEnabled}>
+          {generateLabel}
+        </button>
+      )}
       {!isGenerating && !isDoneGenerating && (
         <>
           {credits > 0 && <> (you have {credits.toLocaleString()} credits)</>}
