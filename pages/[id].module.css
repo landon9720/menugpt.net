@@ -2,6 +2,11 @@ p.notGeneratedYet {
   font-style: italic;
 }
 
+p.generated {
+  font-style: italic;
+  font-size: smaller;
+}
+
 ol.children li {
   margin: 0.2rem;
 }

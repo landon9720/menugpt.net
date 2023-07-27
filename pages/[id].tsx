@@ -29,7 +29,7 @@ export default function Page({ id, prompt }: { id: String; prompt: Prompt }) {
         </p>
       )}
       {!body && <GenerateButton id={id} />}
-      {timestamp && <p>generated {new Date(timestamp).toUTCString()}</p>}
+      {timestamp && <p className={styles.generated}>{new Date(timestamp).toUTCString()}</p>}
       {children && (
         <ol className={styles.children}>
           {prompt.children?.map((child) => (
