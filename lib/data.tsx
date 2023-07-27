@@ -1,11 +1,11 @@
-import { Client } from 'pg'
+import { Client, ClientConfig } from 'pg'
 
-const dbConfig = {
-  host: '127.0.0.1',
-  port: 5432,
-  database: 'landon9720',
-  user: 'landon9720',
-  password: 'landon9720',
+const dbConfig: ClientConfig = {
+  host: process.env.POSTGRES_HOST,
+  database: process.env.POSTGRES_DATABASE,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  ssl: process.env.POSTGRES_SSL === "true"
 }
 
 export interface Prompt {
