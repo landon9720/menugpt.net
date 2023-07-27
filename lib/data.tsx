@@ -5,7 +5,7 @@ const dbConfig: ClientConfig = {
   database: process.env.POSTGRES_DATABASE,
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
-  ssl: process.env.POSTGRES_SSL === "true"
+  ssl: process.env.POSTGRES_SSL === 'true',
 }
 
 export interface Prompt {
