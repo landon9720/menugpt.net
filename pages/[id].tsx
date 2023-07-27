@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import Top from '../src/Top'
 import styles from './[id].module.css'
 import ReactMarkdown from 'react-markdown'
-import Avatar from '../src/Avatar'
+import Timestamp from '../src/Timestamp'
 import UserAuth from '../src/UserAuth'
 import GenerateButton from '../src/GenerateButton'
 import PromptList from '@/src/PromptList'
@@ -38,9 +38,7 @@ export default function Page({
       {!body && <GenerateButton id={prompt_id} />}
       {children && <PromptList prompts={children} />}
       {!body && <UserAuth />}
-      {timestamp && (
-        <p className={styles.generated}>{new Date(timestamp).toUTCString()}</p>
-      )}
+      {timestamp && <Timestamp timestamp={timestamp} />}
     </div>
   )
 }
