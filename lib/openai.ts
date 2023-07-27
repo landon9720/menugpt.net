@@ -14,7 +14,7 @@ async function callOpenAiApi(
   const chatCompletion = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
     messages,
-    temperature: 1.2, // 0-2
+    temperature: 1.5, // 0-2
     n: 1, // number of choices
     max_tokens: 250, // number of tokens to generate
   })
