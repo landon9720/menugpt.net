@@ -80,7 +80,7 @@ export async function getTopPrompts(): Promise<Prompt[]> {
        LEFT JOIN star s ON p.prompt_id = s.prompt_id
        WHERE body IS NOT NULL
        GROUP BY p.prompt_id
-       ORDER BY star_count DESC
+       ORDER BY star_count DESC, timestamp ASC
        LIMIT 10`,
     )
     return rows.map((row) => ({
