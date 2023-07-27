@@ -11,7 +11,12 @@ export default function UserAuth() {
     <footer>
       {!user && (
         <p>
-          <Link href="/api/auth/login">[&#8594; sign-in]</Link>
+          <Link
+            href="/api/auth/login"
+            title="Sign-in is required to generate content and star pages"
+          >
+            [&#8594; sign-in]
+          </Link>
         </p>
       )}
       {user && (

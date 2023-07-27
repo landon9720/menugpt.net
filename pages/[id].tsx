@@ -9,6 +9,7 @@ import UserAuth from '../src/UserAuth'
 import GenerateButton from '../src/GenerateButton'
 import PromptList from '@/src/PromptList'
 import Star from '@/src/Star'
+import Head from 'next/head'
 
 export default function Page({
   prompt,
@@ -24,9 +25,17 @@ export default function Page({
   const { prompt_id, input, body, parent_id, timestamp } = prompt
   return (
     <div>
+      <Head>
+        <title>{input}</title>
+      </Head>
       {parent_id && (
         <p>
-          <Link href={parent_id}>[&#8593; parent]</Link>
+          <Link
+            href={parent_id}
+            title="Go to page where this page was generated"
+          >
+            [&#8593; parent]
+          </Link>
         </p>
       )}
       <Top text={input} />
@@ -38,7 +47,9 @@ export default function Page({
       )}
       {!body && <GenerateButton id={prompt_id} />}
       {children && <PromptList prompts={children} />}
-      {body && <Timestamp timestamp={timestamp} />}
+      {body && (
+        <Timestamp timestamp={timestamp} title="When this page was generated" />
+      )}
       {body && <Star promptId={prompt_id} />}
       <UserAuth />
     </div>

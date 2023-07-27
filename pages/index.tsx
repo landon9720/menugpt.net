@@ -28,7 +28,10 @@ export default function Index({ top, recent, timestamp }: Props) {
       <PromptList prompts={top} />
       <h3>Recent</h3>
       <PromptList prompts={recent} />
-      <Timestamp timestamp={timestamp} />
+      <Timestamp
+        timestamp={timestamp}
+        title="When this page was last generated"
+      />
     </>
   )
 }

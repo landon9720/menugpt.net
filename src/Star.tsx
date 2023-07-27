@@ -34,12 +34,17 @@ export default function Star({ promptId }: { promptId: string }) {
     })
   })
 
+  const title = isStarred
+    ? 'Your star means you like it - click to remove star'
+    : 'Star it if you like it - click to add your star'
+
   return (
     user && (
       <button
         className={styles.star}
         disabled={!user || isRequesting}
         onClick={onClick}
+        title={title}
       >
         {(isStarred && <>&#127775;</>) || <>&#9734;</>}
       </button>

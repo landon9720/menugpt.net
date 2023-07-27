@@ -9,15 +9,18 @@ export default function GenerateButton({ id }) {
   const [credits, setCredits] = useState(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDoneGenerating, setIsDoneGenerating] = useState(false)
+  const [errorGenerating, setErrorGenerating] = useState(false)
 
   const generate = async () => {
     try {
       setIsGenerating(true)
       const res = await fetch(`/api/generate/${id}`)
+      setIsGenerating(false)
+      setIsDoneGenerating(true)
       if (res.status == 200) {
-        setIsGenerating(false)
-        setIsDoneGenerating(true)
         setTimeout(() => router.reload(), 1000)
+      } else {
+        setErrorGenerating(true)
       }
     } catch (err) {
       setIsGenerating(false)
@@ -46,6 +49,8 @@ export default function GenerateButton({ id }) {
   let generateLabel = `Generate for 1 credit (${creditInfo})`
   if (isGenerating) {
     generateLabel = 'Generating, please wait...'
+  } else if (errorGenerating) {
+    generateLabel = 'Error generating :-( Refresh and try again?'
   } else if (isDoneGenerating) {
     generateLabel = 'Ready to refresh!'
   }

@@ -5,7 +5,7 @@ import styles from './Top.module.css'
 export default function Top({ text }: { text: string }) {
   return (
     <header className={styles.head}>
-      <Link href="/">
+      <Link href="/" title="Go to MenuGpt.net home page">
         <Image
           className={styles.gopher}
           src="/gopher.png"
