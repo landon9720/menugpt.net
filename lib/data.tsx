@@ -211,8 +211,8 @@ export async function setUser(user: User): Promise<void> {
           nickname = EXCLUDED.nickname,
           name = EXCLUDED.name,
           picture = EXCLUDED.picture,
-          locale = EXCLUDED.picture,
-          email = EXCLUDED.picture
+          locale = EXCLUDED.locale,
+          email = EXCLUDED.email
     `
     const { rowCount } = await client.query(query, [
       user.user_id,
