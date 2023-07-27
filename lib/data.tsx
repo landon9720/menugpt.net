@@ -135,6 +135,21 @@ export async function getPromptChildren(
   }
 }
 
+export async function getGeneratedPromptCount(): Promise<number> {
+  const client = new Client(dbConfig)
+  await client.connect()
+  try {
+    const query = 'SELECT COUNT(*) FROM prompt WHERE body IS NOT NULL'
+    const result = await client.query(query)
+    const count = parseInt(result.rows[0].count, 10)
+    return count
+  } catch (error) {
+    throw new Error(`Error counting prompt records: ${error}`)
+  } finally {
+    await client.end()
+  }
+}
+
 export async function decrementUserCredits(userId: string): Promise<number> {
   const client = new Client(dbConfig)
   await client.connect()
