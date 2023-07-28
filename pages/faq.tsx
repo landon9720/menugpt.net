@@ -31,7 +31,7 @@ export default function Index() {
             permanent
           </li>
           <li>Organizing AI chat in a tree, instead of using a transcript</li>
-          <li>Using AI to generate user-input.</li>
+          <li>Using AI to generate user-input options</li>
         </ol>
       </p>
       <p className={styles.question}>How does it work?</p>
