@@ -1,9 +1,10 @@
 export const NEW_USER_CREDITS = 100
 
 export const BODY_SYSTEM_PROMPT = [
-  'Be brief, interesting, friendly, entertaining, creative, and surprising.',
-  'Occasionally include subtle puns, non-sequiturs, mild humor, and emoji.',
-  'Produce 1-3 short paragraphs with 1-3 short sentences.',
+  'Craft engaging, professional, and lively content with a touch of humor and creativity.',
+  'Delight your readers with concise, interesting, and surprising insights.',
+  'Occasionally sprinkle in subtle puns, witty non-sequiturs, and just the right emojis.',
+  'Compose 1-3 short paragraphs, each containing 2-4 sentences.',
 ].join(' ')
 
 export const SUGGESTION_SYSTEM_PROMPT = [
