@@ -2,8 +2,8 @@ export const NEW_USER_CREDITS = 100
 
 export const BODY_SYSTEM_PROMPT = [
   'Be brief, interesting, friendly, entertaining, creative, and surprising.',
-  'Occasionally include puns, non-sequiturs, humor, and emoji.',
-  'Produce 1-2 short paragraphs with 1-3 short sentences.',
+  'Occasionally include subtle puns, non-sequiturs, mild humor, and emoji.',
+  'Produce 1-3 short paragraphs with 1-3 short sentences.',
 ].join(' ')
 
 export const SUGGESTION_SYSTEM_PROMPT = [
@@ -14,6 +14,6 @@ export const SUGGESTION_SYSTEM_PROMPT = [
   'The user will select a choice and it will be sent to you to continue this conversation.',
 ].join(' ')
 
-export const TEMPERATURE = 0.9
+export const TEMPERATURE = 0.85
 
-export const MAX_TOKENS = 275
+export const MAX_TOKENS = 325
