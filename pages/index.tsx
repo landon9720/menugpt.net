@@ -2,7 +2,9 @@ import {
   Prompt,
   getGeneratedPromptCount,
   getRecentPrompts,
+  getStarCount,
   getTopPrompts,
+  getUserCount,
 } from '@/lib/data'
 import PromptList from '@/src/PromptList'
 import Timestamp from '@/src/Timestamp'
@@ -17,10 +19,19 @@ interface Props {
   top: Prompt[]
   recent: Prompt[]
   promptCount: number
+  userCount: number
+  starCount: number
   timestamp: string
 }
 
-export default function Index({ top, recent, timestamp, promptCount }: Props) {
+export default function Index({
+  top,
+  recent,
+  timestamp,
+  promptCount,
+  userCount,
+  starCount,
+}: Props) {
   const router = useRouter()
   const homeRedirectTo = router.query.homeRedirectTo as string
   type View = 'new' | 'top'
@@ -44,7 +55,10 @@ export default function Index({ top, recent, timestamp, promptCount }: Props) {
         </select>
       </p>
       <PromptList prompts={view === 'top' ? top : recent} />
-      <p>MenuGpt.net has {promptCount} pages generated.</p>
+      <p>
+        MenuGpt.net has {promptCount} pages, with {starCount} stars, generated
+        by {userCount} users.
+      </p>
       <Timestamp
         timestamp={timestamp}
         title="When this page was last generated"
@@ -54,16 +68,20 @@ export default function Index({ top, recent, timestamp, promptCount }: Props) {
 }
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [top, recent, promptCount] = await Promise.all([
+  const [top, recent, promptCount, userCount, starCount] = await Promise.all([
     getTopPrompts(),
     getRecentPrompts(),
     getGeneratedPromptCount(),
+    getUserCount(),
+    getStarCount(),
   ])
   return {
     props: {
       top,
       recent,
       promptCount,
+      userCount,
+      starCount,
       timestamp: new Date().toISOString(),
     },
     revalidate: 60,

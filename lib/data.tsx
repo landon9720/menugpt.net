@@ -235,6 +235,21 @@ export async function setUser(user: User): Promise<void> {
   }
 }
 
+export async function getUserCount(): Promise<number> {
+  const client = new Client(dbConfig)
+  await client.connect()
+  try {
+    const query = 'SELECT COUNT(*) FROM "user"'
+    const result = await client.query(query)
+    const count = parseInt(result.rows[0].count, 10)
+    return count
+  } catch (error) {
+    throw new Error(`Error counting prompt users: ${error}`)
+  } finally {
+    await client.end()
+  }
+}
+
 export async function getStar(
   userId: string,
   promptId: string,
@@ -283,6 +298,21 @@ export async function unsetStar(
     )
   } catch (error) {
     throw new Error(`Error removing star: ${error}`)
+  } finally {
+    await client.end()
+  }
+}
+
+export async function getStarCount(): Promise<number> {
+  const client = new Client(dbConfig)
+  await client.connect()
+  try {
+    const query = 'SELECT COUNT(*) FROM star'
+    const result = await client.query(query)
+    const count = parseInt(result.rows[0].count, 10)
+    return count
+  } catch (error) {
+    throw new Error(`Error counting prompt stars: ${error}`)
   } finally {
     await client.end()
   }
