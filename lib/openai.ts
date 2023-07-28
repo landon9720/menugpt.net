@@ -1,5 +1,10 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai'
-import { BODY_SYSTEM_PROMPT, SUGGESTION_SYSTEM_PROMPT } from './globals'
+import {
+  BODY_SYSTEM_PROMPT,
+  SUGGESTION_SYSTEM_PROMPT,
+  TEMPERATURE,
+  MAX_TOKENS,
+} from './globals'
 import { Prompt } from './data'
 
 const openai = new OpenAIApi(
@@ -14,9 +19,9 @@ async function callOpenAiApi(
   const chatCompletion = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
     messages,
-    temperature: 1.0, // 0-2
+    temperature: TEMPERATURE, // 0-2
     n: 1, // number of choices
-    max_tokens: 250, // number of tokens to generate
+    max_tokens: MAX_TOKENS, // number of tokens to generate
   })
   const result = chatCompletion.data.choices[0].message?.content
   if (!result) {
