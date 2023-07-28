@@ -39,7 +39,7 @@ export default withApiAuthRequired(async function handler(
     return
   }
   if (prompt.body) {
-    res.status(400).end()
+    res.status(200).end()
     return
   }
   const parent =
