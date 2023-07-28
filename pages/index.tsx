@@ -23,8 +23,8 @@ interface Props {
 export default function Index({ top, recent, timestamp, promptCount }: Props) {
   const router = useRouter()
   const homeRedirectTo = router.query.homeRedirectTo as string
-  type View = 'top' | 'recent'
-  const [view, setView] = useState<View>('recent')
+  type View = 'new' | 'top'
+  const [view, setView] = useState<View>('top')
   const go = (event: ChangeEvent<HTMLSelectElement>) => {
     setView(event.target.value as View)
   }
@@ -39,8 +39,8 @@ export default function Index({ top, recent, timestamp, promptCount }: Props) {
       </p>
       <p>
         <select className={styles.view} onChange={go}>
+          <option value="new">New</option>
           <option value="top">Top</option>
-          <option value="recent">Recent</option>
         </select>
       </p>
       <PromptList prompts={view === 'top' ? top : recent} />
