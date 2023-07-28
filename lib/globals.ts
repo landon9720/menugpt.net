@@ -10,8 +10,10 @@ export const BODY_SYSTEM_PROMPT = [
 export const SUGGESTION_SYSTEM_PROMPT = [
   'Provide a menu of 5-10 brief choices for what the user may say next.',
   'Choices may be serious, practical, humorous, unexpected, or whimsical.',
-  'Choices should be a question, request more detail, request a new subject, or provide information.',
-  'Choices may be unexpected or off-topic.',
+  'Choices may be questions, request detail, or start a new subject.',
+  'Some choices should be on-topic.',
+  'Some choices should be tangential.',
+  'Some choices should be off-topic.',
   'The user will select a choice and it will be sent to you to continue this conversation.',
 ].join(' ')
 
