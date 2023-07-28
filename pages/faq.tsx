@@ -23,7 +23,7 @@ export default function Index() {
       </p>
       <p className={styles.question}>Why does this exist?</p>
       <p>
-        This is an exploration of unique ideas:
+        This is an exploration of ideas:
         <ol>
           <li>Using AI to generate static page content</li>
           <li>
@@ -31,6 +31,7 @@ export default function Index() {
             permanent
           </li>
           <li>Organizing AI chat in a tree, instead of using a transcript</li>
+          <li>Using AI to generate user-input.</li>
         </ol>
       </p>
       <p className={styles.question}>How does it work?</p>
