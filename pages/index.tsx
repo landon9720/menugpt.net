@@ -24,7 +24,7 @@ export default function Index({ top, recent, timestamp, promptCount }: Props) {
   const router = useRouter()
   const homeRedirectTo = router.query.homeRedirectTo as string
   type View = 'top' | 'recent'
-  const [view, setView] = useState<View>('top')
+  const [view, setView] = useState<View>('recent')
   const go = (event: ChangeEvent<HTMLSelectElement>) => {
     setView(event.target.value as View)
   }
