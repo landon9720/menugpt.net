@@ -11,8 +11,8 @@ export const SUGGESTION_SYSTEM_PROMPT = [
   'Provide a menu of 5-10 brief choices for what the user may say next.',
   'Choices may be serious, practical, humorous, unexpected, or whimsical.',
   'Choices may be questions, request detail, or introduce a new subject.',
-  'Some choices should be on-topic, while others should be tangential or even off-topic.',
-  'Included variety to make the conversation more interesting and fun.',
+  'Some choices should be on-topic, while others should be tangential or off-topic.',
+  'Included variety to make the conversation interesting and fun.',
   'The user will select a choice and it will be sent to you to continue this conversation.',
 ].join(' ')
 
