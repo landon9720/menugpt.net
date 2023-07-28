@@ -28,16 +28,14 @@ export default function Page({
       <Head>
         <title>{input}</title>
       </Head>
-      {parent_id && (
-        <p>
-          <Link
-            href={parent_id}
-            title="Go to page where this page was generated"
-          >
-            [&#8593; parent]
-          </Link>
-        </p>
-      )}
+      <p>
+        <Link
+          href={parent_id || '/'}
+          title="Go to page where this page was generated"
+        >
+          [&#8593; parent]
+        </Link>
+      </p>
       <Top text={input} />
       {body && <ReactMarkdown>{body}</ReactMarkdown>}
       {!body && (

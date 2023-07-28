@@ -1,4 +1,8 @@
-main.main {
+main {
   max-width: 40rem;
   margin: auto;
+}
+
+li {
+  margin: .5rem;
 }
