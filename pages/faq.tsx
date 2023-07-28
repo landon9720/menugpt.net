@@ -24,15 +24,15 @@ export default function Index() {
       <p className={styles.question}>Why does this exist?</p>
       <p>
         This is an exploration of ideas:
-        <ol>
-          <li>Using AI to generate static page content</li>
+        <ul>
+          <li>Use AI to generate static page content</li>
+          <li>Use AI to generate user-input options</li>
           <li>
-            Lowering AI cost by making the conversation public, shared, and
+            Lower AI cost by making the conversation public, shared, and
             permanent
           </li>
-          <li>Organizing AI chat in a tree, instead of using a transcript</li>
-          <li>Using AI to generate user-input options</li>
-        </ol>
+          <li>Organize AI chat in a tree, instead of using a transcript</li>
+        </ul>
       </p>
       <p className={styles.question}>How does it work?</p>
       <p>
@@ -40,8 +40,8 @@ export default function Index() {
         <Link href="https://platform.openai.com/docs/api-reference/completions">
           OpenAI Chat Completion API
         </Link>{' '}
-        is used to generate page content. Every page has a unique and permanent
-        URL.
+        is used to generate page content and responses. Every page has a unique
+        and permanent URL.
       </p>
       <p className={styles.question}>Is sign-in required?</p>
       <p>
