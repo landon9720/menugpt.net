@@ -80,7 +80,7 @@ export async function searchPrompts(userInput: string): Promise<Prompt[]> {
     const { rows } = await client.query(
       `SELECT *
        FROM prompt p
-       WHERE to_tsvector('english', p.input || ' ' || p.body) @@ to_tsquery('english', $1)
+       WHERE to_tsvector('english', p.input || ' ' || p.body) @@ plainto_tsquery('english', $1)
        LIMIT 10`,
       [userInput],
     )
