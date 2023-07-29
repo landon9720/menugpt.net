@@ -3,7 +3,7 @@ import { useUser } from '@auth0/nextjs-auth0/client'
 import { useEffect, useState } from 'react'
 
 export default function Star({ promptId }: { promptId: string }) {
-  const { user, isLoadingUser } = useUser()
+  const { user, isLoading: isLoadingUser } = useUser()
   const [isStarred, setIsStarred] = useState<boolean | null>(null)
   const [isRequesting, setIsRequesting] = useState(false)
 
