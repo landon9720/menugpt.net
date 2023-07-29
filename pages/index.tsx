@@ -12,11 +12,7 @@ import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import NodeCache from 'node-cache'
-import {
-  ChangeEvent,
-  FormEvent,
-  useState
-} from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import Top from '../src/Top'
 import styles from './index.module.css'
 
@@ -49,7 +45,7 @@ export default function Index({
     setUserInput('')
   }
   const [userInput, setUserInput] = useState('')
-  const [searchResults, setSearchResults] = useState<Prompt[]>([])
+  const [searchResults, setSearchResults] = useState<Prompt[] | null>(null)
   const updateUserInputState = (event: ChangeEvent<HTMLInputElement>) => {
     setUserInput(event.target.value)
     if (view !== 'search') {
@@ -91,7 +87,7 @@ export default function Index({
       promptsInView = top
       break
     case 'search':
-      promptsInView = searchResults
+      promptsInView = searchResults || []
   }
 
   return (
@@ -132,7 +128,9 @@ export default function Index({
           {userCount.toLocaleString()} users.
         </p>
       )}
-      {view === 'search' && <p>{searchResults.length} search results</p>}
+      {view === 'search' && searchResults !== null && (
+        <p>{searchResults.length} search results</p>
+      )}
       <p>
         <Link href="faq">Frequently asked questions (FAQ)</Link>
       </p>
