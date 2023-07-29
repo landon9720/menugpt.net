@@ -31,3 +31,5 @@ CREATE TABLE star (
 
 INSERT INTO prompt (prompt_id, input, timestamp)
 VALUES ('1', 'Existence', NOW());
+
+CREATE INDEX prompt_fulltext_idx ON prompt USING gin (to_tsvector('english', input || ' ' || body));

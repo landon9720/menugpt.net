@@ -70,6 +70,28 @@ export async function setPrompt(prompt: Prompt): Promise<void> {
   }
 }
 
+export async function searchPrompts(userInput: string): Promise<Prompt[]> {
+  const client = new Client(dbConfig)
+  await client.connect()
+  try {
+    const { rows } = await client.query(
+      `SELECT *
+       FROM prompt p
+       WHERE to_tsvector('english', p.input || ' ' || p.body) @@ to_tsquery('english', $1)
+       LIMIT 10`,
+      [userInput],
+    )
+    return rows.map((row) => ({
+      ...row,
+      timestamp: row.timestamp.toUTCString(),
+    }))
+  } catch (error) {
+    throw new Error(`Error searching prompts: ${error}`)
+  } finally {
+    await client.end()
+  }
+}
+
 export async function getTopPrompts(): Promise<Prompt[]> {
   const client = new Client(dbConfig)
   await client.connect()
