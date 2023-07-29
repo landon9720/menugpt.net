@@ -16,7 +16,7 @@ export default function Page({
   children,
 }: {
   prompt: Prompt
-  children?: Prompt[]
+  children: Prompt[]
 }) {
   const router = useRouter()
   if (router.isFallback) {
@@ -43,8 +43,11 @@ export default function Page({
           This page&apos;s content has not been generated, yet.
         </p>
       )}
-      {!body && <GenerateButton id={prompt_id} />}
-      {children && <PromptList prompts={children} />}
+      {!body && <GenerateButton id={prompt_id} generateContentType="body" />}
+      {children.length > 0 && <PromptList prompts={children} />}
+      {body && !children.length && (
+        <GenerateButton id={prompt_id} generateContentType="children" />
+      )}
       {body && (
         <Timestamp timestamp={timestamp} title="When this page was generated" />
       )}

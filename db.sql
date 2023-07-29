@@ -33,3 +33,7 @@ INSERT INTO prompt (prompt_id, input, timestamp)
 VALUES ('1', 'Existence', NOW());
 
 CREATE INDEX prompt_fulltext_idx ON prompt USING gin (to_tsvector('english', input || ' ' || body));
+
+ALTER TABLE prompt ADD COLUMN body_user_id VARCHAR NULL;
+
+ALTER TABLE prompt ADD CONSTRAINT fk_body_user_id FOREIGN KEY (body_user_id) REFERENCES "user" (user_id) ON DELETE CASCADE;

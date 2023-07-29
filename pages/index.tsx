@@ -93,16 +93,10 @@ export default function Index({
   return (
     <>
       <Top text={'Welcome to MenuGpt.net'} />
-      <select className={styles.view} onChange={go}>
-        <option value="new" selected={view === 'new'}>
-          New
-        </option>
-        <option value="top" selected={view === 'top'}>
-          Top
-        </option>
-        <option value="search" selected={view === 'search'}>
-          Search
-        </option>
+      <select className={styles.view} onChange={go} value={view}>
+        <option value="new">New</option>
+        <option value="top">Top</option>
+        <option value="search">Search</option>
       </select>
       <form className={styles.search} onSubmit={formSubmit}>
         <input
@@ -110,14 +104,8 @@ export default function Index({
           type="search"
           value={userInput}
           onChange={updateUserInputState}
-          placeholder="query"
+          placeholder="Search"
           disabled={isSearching}
-        />
-        <input
-          className={styles.searchButton}
-          type="submit"
-          value="Search"
-          disabled={isSearching || view !== 'search'}
         />
       </form>
       <PromptList prompts={promptsInView} />

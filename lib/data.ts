@@ -10,8 +10,9 @@ const dbConfig: ClientConfig = {
 
 export interface Prompt {
   prompt_id: string
-  user_id?: string
+  user_id: string
   body?: string
+  body_user_id?: string
   input: string
   parent_id?: string
   timestamp: string
@@ -41,11 +42,12 @@ export async function setPrompt(prompt: Prompt): Promise<void> {
   await client.connect()
   try {
     const { rowCount } = await client.query(
-      `INSERT INTO prompt (prompt_id, user_id, body, input, parent_id, timestamp)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO prompt (prompt_id, user_id, body, body_user_id, input, parent_id, timestamp)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        ON CONFLICT (prompt_id) DO UPDATE
        SET user_id = EXCLUDED.user_id,
            body = EXCLUDED.body,
+           body_user_id = EXCLUDED.body_user_id,
            input = EXCLUDED.input,
            parent_id = EXCLUDED.parent_id,
            timestamp = EXCLUDED.timestamp`,
@@ -53,6 +55,7 @@ export async function setPrompt(prompt: Prompt): Promise<void> {
         prompt.prompt_id,
         prompt.user_id,
         prompt.body,
+        prompt.body_user_id,
         prompt.input,
         prompt.parent_id,
         new Date(prompt.timestamp),
@@ -143,7 +146,8 @@ export async function getPromptChildren(
     const { rows } = await client.query(
       `SELECT *
        FROM prompt
-       WHERE parent_id = $1`,
+       WHERE parent_id = $1
+       ORDER BY timestamp ASC`,
       [parentPromptId],
     )
     return rows.map((row) => ({

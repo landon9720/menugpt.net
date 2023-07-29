@@ -28,7 +28,6 @@ export default function Star({ promptId }: { promptId: string }) {
     fetch(`/api/star/${promptId}`).then(async (res) => {
       if (res.status === 200) {
         const data = await res.json()
-        console.log('star', data)
         setIsStarred(data)
       }
     })

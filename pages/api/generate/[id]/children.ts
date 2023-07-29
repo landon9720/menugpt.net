@@ -38,27 +38,25 @@ export default withApiAuthRequired(async function handler(
     res.status(404).end()
     return
   }
-  if (prompt.body) {
-    res.status(200).end()
+  if (!prompt.body) {
+    res.status(401).end()
     return
   }
   const parent =
     (prompt.parent_id && (await getPrompt(prompt.parent_id))) || undefined
-  prompt.body = await generatePromptBody(prompt.input, parent)
   const generatedChildren = await generatePromptChildren(prompt, parent)
-
   for (var i = 0; i < generatedChildren.length; ++i) {
     const childPromptInput = generatedChildren[i]
     const childId = md5(id + childPromptInput)
     const child: Prompt = {
       prompt_id: childId,
+      user_id: user.user_id,
       input: childPromptInput,
       parent_id: id,
       timestamp: new Date().toISOString(),
     }
     await setPrompt(child)
   }
-  prompt.user_id = user.user_id
   prompt.timestamp = new Date().toISOString()
   await setPrompt(prompt)
   await res.revalidate(`/${id}`)

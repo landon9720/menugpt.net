@@ -55,7 +55,7 @@ export default function Index() {
       </p>
       <p className={styles.question}>What are credits?</p>
       <p>
-        The cost to generate a page is 1 credit. New accounts are granted{' '}
+        The cost to generate content is 1 credit. New accounts are granted{' '}
         {NEW_USER_CREDITS} credits. To request additional credits, contact the
         author. This is needed to keep costs down and prevent abuse. Payment for
         credits, ads, or other monetization may be added in the future.

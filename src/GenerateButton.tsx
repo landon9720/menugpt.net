@@ -3,10 +3,20 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import styles from './GenerateButton.module.css'
 
-export default function GenerateButton({ id }) {
+export type GenerateContentType = 'body' | 'children'
+
+export interface GenerateButtonProps {
+  id: string
+  generateContentType: GenerateContentType
+}
+
+export default function GenerateButton({
+  id,
+  generateContentType,
+}: GenerateButtonProps) {
   const router = useRouter()
   const { user, isLoading: isLoadingUser } = useUser()
-  const [credits, setCredits] = useState(null)
+  const [credits, setCredits] = useState<number | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDoneGenerating, setIsDoneGenerating] = useState(false)
   const [errorGenerating, setErrorGenerating] = useState(false)
@@ -14,7 +24,7 @@ export default function GenerateButton({ id }) {
   const generate = async () => {
     try {
       setIsGenerating(true)
-      const res = await fetch(`/api/generate/${id}`)
+      const res = await fetch(`/api/generate/${id}/${generateContentType}`)
       setIsGenerating(false)
       setIsDoneGenerating(true)
       if (res.status == 200) {
@@ -40,13 +50,22 @@ export default function GenerateButton({ id }) {
   }, [])
 
   let creditInfo = 'loading credits...'
-  if (credits > 0) {
+  if (credits && credits > 0) {
     creditInfo = `you have ${credits.toLocaleString()} credits`
   } else if (credits === 0) {
     creditInfo = 'no credits!'
   }
-  const generateEnabled = credits > 0 && !isGenerating && !isDoneGenerating
-  let generateLabel = `Generate for 1 credit (${creditInfo})`
+  const generateEnabled =
+    credits && credits > 0 && !isGenerating && !isDoneGenerating
+  let generateLabel: String = ''
+  switch (generateContentType) {
+    case 'body':
+      generateLabel = `Generate body for 1 credit (${creditInfo})`
+      break
+    case 'children':
+      generateLabel = `Generate replies for 1 credit (${creditInfo})`
+      break
+  }
   if (isGenerating) {
     generateLabel = 'Generating, please wait...'
   } else if (errorGenerating) {
