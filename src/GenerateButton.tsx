@@ -47,7 +47,7 @@ export default function GenerateButton({
         }
       })
     }
-  }, [])
+  }, [isLoadingUser])
 
   let creditInfo = 'loading credits...'
   if (credits && credits > 0) {

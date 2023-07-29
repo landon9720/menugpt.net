@@ -3,7 +3,7 @@ import { useUser } from '@auth0/nextjs-auth0/client'
 import { useEffect, useState } from 'react'
 
 export default function Star({ promptId }: { promptId: string }) {
-  const { user } = useUser()
+  const { user, isLoadingUser } = useUser()
   const [isStarred, setIsStarred] = useState<boolean | null>(null)
   const [isRequesting, setIsRequesting] = useState(false)
 
@@ -23,13 +23,15 @@ export default function Star({ promptId }: { promptId: string }) {
   }
 
   useEffect(() => {
-    fetch(`/api/star/${promptId}`).then(async (res) => {
-      if (res.status === 200) {
-        const data = await res.json()
-        setIsStarred(data)
-      }
-    })
-  }, [promptId])
+    if (!isLoadingUser) {
+      fetch(`/api/star/${promptId}`).then(async (res) => {
+        if (res.status === 200) {
+          const data = await res.json()
+          setIsStarred(data)
+        }
+      })
+    }
+  }, [promptId, isLoadingUser])
 
   const title = isStarred
     ? 'Your star means you like it - click to remove star'
