@@ -1,10 +1,8 @@
 import styles from './Star.module.css'
 import { useUser } from '@auth0/nextjs-auth0/client'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 export default function Star({ promptId }: { promptId: string }) {
-  const router = useRouter()
   const { user } = useUser()
   const [isStarred, setIsStarred] = useState<boolean | null>(null)
   const [isRequesting, setIsRequesting] = useState(false)
@@ -31,7 +29,7 @@ export default function Star({ promptId }: { promptId: string }) {
         setIsStarred(data)
       }
     })
-  })
+  }, [promptId])
 
   const title = isStarred
     ? 'Your star means you like it - click to remove star'
