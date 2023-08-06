@@ -15,31 +15,36 @@ export default function GenerateButton({
   generateContentType,
 }: GenerateButtonProps) {
   const router = useRouter()
-  const { user, isLoading: isLoadingUser } = useUser()
+  const { user, isLoading } = useUser()
   const [credits, setCredits] = useState<number | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDoneGenerating, setIsDoneGenerating] = useState(false)
   const [errorGenerating, setErrorGenerating] = useState(false)
 
   const generate = async () => {
-    try {
-      setIsGenerating(true)
-      const res = await fetch(`/api/generate/${id}/${generateContentType}`)
-      setIsGenerating(false)
-      setIsDoneGenerating(true)
-      if (res.status == 200) {
-        setTimeout(() => router.reload(), 1000)
-      } else {
+    if (!user) {
+      router.push('/api/auth/login')
+    } else {
+      try {
+        setIsGenerating(true)
+        const res = await fetch(`/api/generate/${id}/${generateContentType}`)
+        setIsGenerating(false)
+        setIsDoneGenerating(true)
+        if (res.status == 200) {
+          setTimeout(() => router.reload(), 1000)
+        } else {
+          setErrorGenerating(true)
+        }
+      } catch (err) {
+        setIsGenerating(false)
         setErrorGenerating(true)
+        console.log(err)
       }
-    } catch (err) {
-      setIsGenerating(false)
-      console.log(err)
     }
   }
 
   useEffect(() => {
-    if (!isLoadingUser) {
+    if (!isLoading) {
       fetch('/api/credits').then(async (res) => {
         if (res.status === 200) {
           const data = await res.json()
@@ -47,43 +52,38 @@ export default function GenerateButton({
         }
       })
     }
-  }, [isLoadingUser])
+  }, [isLoading])
 
-  let creditInfo = 'loading credits...'
-  if (credits && credits > 0) {
-    creditInfo = `you have ${credits.toLocaleString()} credits`
-  } else if (credits === 0) {
-    creditInfo = 'no credits!'
-  }
+  const hasCredits = credits && credits > 0
   const generateEnabled =
-    credits && credits > 0 && !isGenerating && !isDoneGenerating
-  let generateLabel: String = ''
-  switch (generateContentType) {
-    case 'body':
-      generateLabel = `Generate body for 1 credit (${creditInfo})`
-      break
-    case 'children':
-      generateLabel = `Generate replies for 1 credit (${creditInfo})`
-      break
-  }
+    !isLoading && ((hasCredits && !isGenerating && !isDoneGenerating) || !user)
+
+  let generateLabel = ''
   if (isGenerating) {
     generateLabel = 'Generating, please wait...'
   } else if (errorGenerating) {
-    generateLabel = 'Error generating :-( Sign-out, then in, and try again?'
+    generateLabel = 'Error generating :-( Refresh and try again?'
   } else if (isDoneGenerating) {
     generateLabel = 'Ready to refresh!'
+  } else {
+    switch (generateContentType) {
+      case 'body':
+        generateLabel = '✨ Generate body'
+        break
+      case 'children':
+        generateLabel = '✨ Generate replies'
+        break
+    }
+    if (user && !hasCredits) {
+      generateLabel += ' (no credits!)'
+    }
   }
+
   return (
-    user && (
-      <p>
-        <button
-          className={styles.generate}
-          onClick={generate}
-          disabled={!generateEnabled}
-        >
-          {generateLabel}
-        </button>
-      </p>
-    )
+    <p className={styles.generate}>
+      <button onClick={generate} disabled={!generateEnabled}>
+        {generateLabel}
+      </button>
+    </p>
   )
 }

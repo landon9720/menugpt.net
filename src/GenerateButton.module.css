@@ -1,4 +1,15 @@
-button.generate {
-  padding: 1rem;
+p.generate {
+  text-align: center;
+  margin: 3rem;
+}
+
+p.generate button {
+  padding: 2rem 5rem;
+  font-size: larger;
+  font-weight: bold;
+  border: 3px dashed darkgreen;
+}
+
+p.generate button:not([disabled]) {
   cursor: pointer;
 }

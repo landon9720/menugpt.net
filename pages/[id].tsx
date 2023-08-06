@@ -5,7 +5,6 @@ import Top from '../src/Top'
 import styles from './[id].module.css'
 import ReactMarkdown from 'react-markdown'
 import Timestamp from '../src/Timestamp'
-import UserAuth from '../src/UserAuth'
 import GenerateButton from '../src/GenerateButton'
 import PromptList from '@/src/PromptList'
 import Star from '@/src/Star'
@@ -38,11 +37,6 @@ export default function Page({
       </p>
       <Top text={input} />
       {body && <ReactMarkdown>{body}</ReactMarkdown>}
-      {!body && (
-        <p className={styles.notGeneratedYet}>
-          This page&apos;s content has not been generated, yet.
-        </p>
-      )}
       {!body && <GenerateButton id={prompt_id} generateContentType="body" />}
       {children.length > 0 && <PromptList prompts={children} />}
       {body && !children.length && (
@@ -52,7 +46,6 @@ export default function Page({
         <Timestamp timestamp={timestamp} title="When this page was generated" />
       )}
       {body && <Star promptId={prompt_id} />}
-      <UserAuth />
     </div>
   )
 }
