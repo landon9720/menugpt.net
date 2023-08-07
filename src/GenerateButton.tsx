@@ -15,6 +15,7 @@ export default function GenerateButton({
   generateContentType,
 }: GenerateButtonProps) {
   const router = useRouter()
+  const afterLogin = router.query.afterLogin
   const { user, isLoading: isLoadingUser } = useUser()
   const [credits, setCredits] = useState<number | null>(null)
   const [isLoadingCredits, setIsLoadingCredits] = useState(false)
@@ -32,7 +33,13 @@ export default function GenerateButton({
         setIsGenerating(false)
         setIsDoneGenerating(true)
         if (res.status == 200) {
-          setTimeout(() => router.replace(id), 1000)
+          setTimeout(() => {
+            if (!afterLogin) {
+              router.reload()
+            } else {
+              router.replace(id)
+            }
+          }, 1000)
         } else {
           setErrorGenerating(true)
         }
@@ -52,7 +59,7 @@ export default function GenerateButton({
           if (res.status === 200) {
             const data = await res.json()
             setCredits(data)
-            if (router.query.afterLogin) {
+            if (afterLogin) {
               generate()
             }
           }
