@@ -31,7 +31,7 @@ export default function GenerateButton({
         setIsGenerating(false)
         setIsDoneGenerating(true)
         if (res.status == 200) {
-          setTimeout(() => router.reload(), 1000)
+          setTimeout(() => router.replace(id), 1000)
         } else {
           setErrorGenerating(true)
         }
@@ -49,6 +49,9 @@ export default function GenerateButton({
         if (res.status === 200) {
           const data = await res.json()
           setCredits(data)
+          if (router.query.afterLogin) {
+            generate()
+          }
         }
       })
     }
@@ -60,9 +63,9 @@ export default function GenerateButton({
 
   let generateLabel = ''
   if (isGenerating) {
-    generateLabel = 'Generating, please wait...'
+    generateLabel = '✨ Generating, please wait...'
   } else if (errorGenerating) {
-    generateLabel = 'Error generating :-( Refresh and try again?'
+    generateLabel = '😳 Error generating - refresh and try again?'
   } else if (isDoneGenerating) {
     generateLabel = 'Ready to refresh!'
   } else {

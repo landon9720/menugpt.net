@@ -10,11 +10,21 @@ import { getUser, setUser } from '@/lib/data'
 import { NEW_USER_CREDITS } from '@/lib/globals'
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import { format, parse } from 'url'
+
 export default handleAuth({
   async login(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    await handleLogin(req, res, {
-      returnTo: req.headers.referer,
-    })
+    const ref = req.headers.referer
+    if (ref) {
+      const url = parse(ref, true)
+      url.query.afterLogin = 'true'
+      const returnTo = format(url)
+      await handleLogin(req, res, {
+        returnTo,
+      })
+    } else {
+      await handleLogin(req, res)
+    }
   },
   async callback(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     await handleCallback(req, res, {
