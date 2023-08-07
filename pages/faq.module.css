@@ -3,10 +3,6 @@ p.question {
 }
 
 .window {
-  width: 100%;
   text-align: center;
-}
-
-p.window img {
-  margin: 5rem auto 0 auto;
+  padding: 2rem;
 }
