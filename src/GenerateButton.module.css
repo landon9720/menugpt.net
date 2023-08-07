@@ -4,12 +4,20 @@ p.generate {
 }
 
 p.generate button {
-  padding: 2rem 5rem;
+  width: 20rem;
+  height: 5rem;
   font-size: larger;
   font-weight: bold;
-  border: 3px dashed darkgreen;
+  border-width: 3px;
+  border-style: dashed;
+}
+
+p.generate button:disabled {
+  cursor: unset;
+  border-color: darkred;
 }
 
 p.generate button:not([disabled]) {
   cursor: pointer;
+  border-color: darkgreen;
 }
