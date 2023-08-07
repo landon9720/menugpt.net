@@ -15,8 +15,9 @@ export default function GenerateButton({
   generateContentType,
 }: GenerateButtonProps) {
   const router = useRouter()
-  const { user, isLoading } = useUser()
+  const { user, isLoading: isLoadingUser } = useUser()
   const [credits, setCredits] = useState<number | null>(null)
+  const [isLoadingCredits, setIsLoadingCredits] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [isDoneGenerating, setIsDoneGenerating] = useState(false)
   const [errorGenerating, setErrorGenerating] = useState(false)
@@ -44,22 +45,27 @@ export default function GenerateButton({
   }
 
   useEffect(() => {
-    if (!isLoading) {
-      fetch('/api/credits').then(async (res) => {
-        if (res.status === 200) {
-          const data = await res.json()
-          setCredits(data)
-          if (router.query.afterLogin) {
-            generate()
+    if (!isLoadingUser) {
+      setIsLoadingCredits(true)
+      fetch('/api/credits')
+        .then(async (res) => {
+          if (res.status === 200) {
+            const data = await res.json()
+            setCredits(data)
+            if (router.query.afterLogin) {
+              generate()
+            }
           }
-        }
-      })
+        })
+        .finally(() => setIsLoadingCredits(false))
     }
-  }, [isLoading])
+  }, [isLoadingUser])
 
   const hasCredits = credits && credits > 0
   const generateEnabled =
-    !isLoading && ((hasCredits && !isGenerating && !isDoneGenerating) || !user)
+    !isLoadingUser &&
+    !isLoadingCredits &&
+    ((hasCredits && !isGenerating && !isDoneGenerating) || !user)
 
   let generateLabel = ''
   if (isGenerating) {
@@ -77,7 +83,7 @@ export default function GenerateButton({
         generateLabel = '✨ Generate replies'
         break
     }
-    if (user && !hasCredits) {
+    if (user && !isLoadingCredits && !hasCredits) {
       generateLabel += ' (no credits!)'
     }
   }
