@@ -1,8 +1,4 @@
-import {
-  BODY_SYSTEM_PROMPT,
-  NEW_USER_CREDITS,
-  SUGGESTION_SYSTEM_PROMPT,
-} from '@/lib/globals'
+import { BODY_SYSTEM_PROMPT, SUGGESTION_SYSTEM_PROMPT } from '@/lib/globals'
 import Link from 'next/link'
 import Top from '../src/Top'
 import styles from './faq.module.css'
@@ -40,23 +36,6 @@ export default function Index() {
         </Link>{' '}
         is used to generate page content and responses. Every page has a unique
         and permanent URL.
-      </p>
-      <p className={styles.question}>Is sign-in required?</p>
-      <p>
-        Pages are freely visible to anybody on the net. However, sign-in is
-        required to generate additional pages, and to star pages.
-      </p>
-      <p className={styles.question}>What are starred pages?</p>
-      <p>
-        Signed-in users can star any pages they like. Stars are used to
-        determine the top pages listed on the home page.
-      </p>
-      <p className={styles.question}>What are credits?</p>
-      <p>
-        The cost to generate content is 1 credit. New accounts are granted{' '}
-        {NEW_USER_CREDITS} credits. To request additional credits, contact the
-        author. This is needed to keep costs down and prevent abuse. Payment for
-        credits, ads, or other monetization may be added in the future.
       </p>
       <p className={styles.question}>How to contact the author?</p>
       <p>

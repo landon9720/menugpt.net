@@ -1,4 +1,3 @@
-import { UserProvider } from '@auth0/nextjs-auth0/client'
 import { Analytics } from '@vercel/analytics/react'
 import type { AppProps } from 'next/app'
 import { Alice } from 'next/font/google'
@@ -14,9 +13,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>MenuGpt.net</title>
       </Head>
-      <UserProvider>
-        <Component {...pageProps} />
-      </UserProvider>
+      <Component {...pageProps} />
       <Analytics />
       <Script
         async

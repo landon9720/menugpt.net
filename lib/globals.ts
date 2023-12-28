@@ -1,5 +1,3 @@
-export const NEW_USER_CREDITS = 100
-
 export const BODY_SYSTEM_PROMPT = [
   'Craft engaging, professional, and lively content with a touch of humor and creativity.',
   'Delight your readers with concise, interesting, and surprising insights.',

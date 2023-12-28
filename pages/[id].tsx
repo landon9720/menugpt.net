@@ -7,7 +7,6 @@ import ReactMarkdown from 'react-markdown'
 import Timestamp from '../src/Timestamp'
 import GenerateButton from '../src/GenerateButton'
 import PromptList from '@/src/PromptList'
-import Star from '@/src/Star'
 import Head from 'next/head'
 
 export default function Page({
@@ -45,7 +44,6 @@ export default function Page({
       {body && (
         <Timestamp timestamp={timestamp} title="When this page was generated" />
       )}
-      {body && <Star promptId={prompt_id} />}
     </div>
   )
 }

@@ -456,7 +456,7 @@ function getRandomEmoji(): string {
   return everyEmoji[Math.floor(Math.random() * everyEmoji.length)]
 }
 
-export default function () {
+export default function RandomEmoji() {
   const [e, set] = useState(getRandomEmoji())
   useEffect(() => {
     const i = () => Math.random() * 300 + 50

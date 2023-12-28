@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS "star" CASCADE;
 DROP TABLE IF EXISTS "prompt" CASCADE;
 DROP TABLE IF EXISTS "user" CASCADE;
 
@@ -37,3 +36,8 @@ CREATE INDEX prompt_fulltext_idx ON prompt USING gin (to_tsvector('english', inp
 ALTER TABLE prompt ADD COLUMN body_user_id VARCHAR NULL;
 
 ALTER TABLE prompt ADD CONSTRAINT fk_body_user_id FOREIGN KEY (body_user_id) REFERENCES "user" (user_id) ON DELETE CASCADE;
+
+ALTER TABLE prompt DROP COLUMN user_id;
+ALTER TABLE prompt DROP COLUMN body_user_id;
+DROP TABLE star;
+DROP TABLE "user";
